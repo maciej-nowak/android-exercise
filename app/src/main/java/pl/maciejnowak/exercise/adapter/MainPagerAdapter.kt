@@ -3,29 +3,27 @@ package pl.maciejnowak.exercise.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import pl.maciejnowak.exercise.fragment.TopArticlesFragment
-import pl.maciejnowak.exercise.fragment.TopWikisFragment
 
 class MainPagerAdapter(manager: FragmentManager)
     : FragmentStatePagerAdapter(manager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
+    private val fragments = mutableListOf<()->Fragment>()
+    private val titles = mutableListOf<String>()
+
     override fun getItem(position: Int): Fragment {
-        return when(position) {
-            0 -> TopWikisFragment.newInstance()
-            1 -> TopArticlesFragment.newInstance()
-            else -> TopWikisFragment.newInstance() //put some default, should never happen
-        }
+        return fragments[position].invoke()
     }
 
     override fun getCount(): Int {
-        return 2
+        return fragments.size
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return when(position) {
-            0 -> "Wikis"
-            1 -> "Articles"
-            else -> null
-        }
+        return titles[position]
+    }
+
+    fun addPage(fragment: () -> Fragment, title: String) {
+        fragments.add(fragment)
+        titles.add(title)
     }
 }
