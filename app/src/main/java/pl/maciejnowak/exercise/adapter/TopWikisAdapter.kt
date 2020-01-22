@@ -49,5 +49,6 @@ class TopWikisAdapter(private val context: Context, private val items: MutableLi
     fun update(items: List<TopWiki>) {
         this.items.clear()
         this.items.addAll(items)
+        notifyDataSetChanged()
     }
 }
