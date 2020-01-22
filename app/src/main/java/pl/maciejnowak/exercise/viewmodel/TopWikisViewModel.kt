@@ -38,8 +38,8 @@ class TopWikisViewModel(private val interactor: TopWikisInteractor) : ViewModel(
             }
             isLoading.value = false
             if(response != null) {
-                items.value = response
-                error.value = false
+                //items.value = response
+                error.value = true
             } else {
                 error.value = true
             }

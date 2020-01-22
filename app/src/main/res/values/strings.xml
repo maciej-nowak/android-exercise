@@ -3,4 +3,8 @@
     <string name="wikis">Wikis</string>
     <string name="articles">Articles</string>
     <string name="articles_count">Articles %d</string>
+    <string name="load_failed_check_connection_and_try_again">Something went wrong. Loading data has failed.</string>
+    <string name="load_data_in_progress">Loading data in progress</string>
+    <string name="no_results">No results</string>
+    <string name="try_again">Try again</string>
 </resources>

@@ -10,6 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_top_wikis.*
+import kotlinx.android.synthetic.main.layout_empty.*
+import kotlinx.android.synthetic.main.layout_error.*
+import kotlinx.android.synthetic.main.layout_progress_bar.*
 
 import pl.maciejnowak.exercise.R
 import pl.maciejnowak.exercise.adapter.TopArticlesAdapter
@@ -56,11 +59,42 @@ class TopArticlesFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.getItems().observe(viewLifecycleOwner, Observer { render(it) })
-        //TODO add more observers
+        viewModel.getIsLoading().observe(viewLifecycleOwner, Observer { renderLoading(it) })
+        viewModel.getError().observe(viewLifecycleOwner, Observer { renderError(it) })
     }
 
     private fun render(items: List<TopArticle>) {
         adapter.update(items)
+        setItemsVisibility()
+    }
+
+    private fun renderLoading(isLoading: Boolean) {
+        if(isLoading) {
+            error_container.visibility = View.GONE
+            progress_bar_container.visibility = View.VISIBLE
+        } else {
+            progress_bar_container.visibility = View.GONE
+        }
+    }
+
+    private fun renderError(error: Boolean) {
+        if(error) {
+            error_container.visibility = View.VISIBLE
+        } else {
+            error_container.visibility = View.GONE
+        }
+    }
+
+    private fun setItemsVisibility() {
+        adapter.run {
+            if(itemCount > 0) {
+                empty_layout.visibility = View.GONE
+                recycler_view.visibility = View.VISIBLE
+            } else {
+                empty_layout.visibility = View.VISIBLE
+                recycler_view.visibility = View.GONE
+            }
+        }
     }
 
     companion object {
