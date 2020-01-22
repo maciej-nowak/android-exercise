@@ -8,16 +8,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import pl.maciejnowak.exercise.interactor.TopWikisInteractor
-import pl.maciejnowak.exercise.model.TopWiki
+import pl.maciejnowak.exercise.interactor.TopArticlesInteractor
+import pl.maciejnowak.exercise.model.TopArticle
 
-class TopArticlesViewModel(private val interactor: TopWikisInteractor) : ViewModel() {
+class TopArticlesViewModel(private val interactor: TopArticlesInteractor) : ViewModel() {
 
-    private val items = MutableLiveData<List<TopWiki>>()
+    private val items = MutableLiveData<List<TopArticle>>()
     private val isLoading = MutableLiveData<Boolean>()
     private val error = MutableLiveData<Boolean>()
 
-    fun getItems(): LiveData<List<TopWiki>> {
+    fun getItems(): LiveData<List<TopArticle>> {
         return items
     }
 
