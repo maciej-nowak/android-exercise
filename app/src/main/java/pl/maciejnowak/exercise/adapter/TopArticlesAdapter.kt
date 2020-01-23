@@ -10,6 +10,7 @@ import pl.maciejnowak.exercise.R
 import pl.maciejnowak.exercise.model.TopArticle
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class TopArticlesAdapter(private val context: Context, private val items: MutableList<TopArticle> = mutableListOf())
     : RecyclerView.Adapter<TopArticlesAdapter.ViewHolder>() {
@@ -32,7 +33,7 @@ class TopArticlesAdapter(private val context: Context, private val items: Mutabl
         holder.apply {
             title.text = item.title
             user.text = item.user
-            date.text = formatter.format(item.timestamp)
+            date.text = formatter.format(item.timestamp * TimeUnit.SECONDS.toMillis(1))
 
         }
     }

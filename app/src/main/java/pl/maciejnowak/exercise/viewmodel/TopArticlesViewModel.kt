@@ -5,11 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pl.maciejnowak.exercise.interactor.TopArticlesInteractor
 import pl.maciejnowak.exercise.model.TopArticle
+import pl.maciejnowak.exercise.network.model.ExpandedArticle
 
 class TopArticlesViewModel(private val interactor: TopArticlesInteractor) : ViewModel() {
 
@@ -33,16 +33,19 @@ class TopArticlesViewModel(private val interactor: TopArticlesInteractor) : View
         viewModelScope.launch {
             isLoading.value = true
             val response = withContext(Dispatchers.IO) {
-                delay(3000) //mock some delay
                 interactor.fetch()
             }
             isLoading.value = false
             if(response != null) {
-                items.value = response
+                items.value = response.items.map(ExpandedArticle::toPresentation)
                 error.value = false
             } else {
                 error.value = true
             }
         }
     }
+}
+
+fun ExpandedArticle.toPresentation(): TopArticle {
+    return TopArticle(title, revision.user, revision.timestamp)
 }
