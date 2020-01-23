@@ -47,5 +47,5 @@ class TopArticlesViewModel(private val interactor: TopArticlesInteractor) : View
 }
 
 fun ExpandedArticle.toPresentation(): TopArticle {
-    return TopArticle(title, revision.user, revision.timestamp)
+    return TopArticle(id, title, revision.user, revision.timestamp)
 }

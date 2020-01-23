@@ -47,5 +47,5 @@ class TopWikisViewModel(private val interactor: TopWikisInteractor) : ViewModel(
 }
 
 fun ExpandedWikiaItem.toPresentation(): TopWiki {
-    return TopWiki(name, image, stats.articles)
+    return TopWiki(id, name, image, stats.articles)
 }
