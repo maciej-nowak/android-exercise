@@ -44,5 +44,6 @@ class TopArticlesAdapter(private val context: Context, private val items: Mutabl
     fun update(items: List<TopArticle>) {
         this.items.clear()
         this.items.addAll(items)
+        notifyDataSetChanged()
     }
 }
