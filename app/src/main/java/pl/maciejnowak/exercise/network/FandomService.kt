@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface FandomApiService  {
+interface FandomService  {
 
     @GET("Wikis/List?expand=1")
     fun getTopWikis(@Query("limit") limit: Int): Call<ExpandedWikiaResultSet>
@@ -19,12 +19,12 @@ interface FandomApiService  {
     companion object {
         private const val BASE_URL = "https://community.fandom.com/api/v1/"
 
-        fun create(): FandomApiService {
+        fun create(): FandomService {
             val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-            return retrofit.create<FandomApiService>(FandomApiService::class.java)
+            return retrofit.create<FandomService>(FandomService::class.java)
         }
     }
 }
