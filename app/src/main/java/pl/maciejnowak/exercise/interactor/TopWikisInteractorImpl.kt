@@ -1,21 +1,23 @@
 package pl.maciejnowak.exercise.interactor
 
-import pl.maciejnowak.exercise.model.TopWiki
+import pl.maciejnowak.exercise.network.FandomApiService
+import pl.maciejnowak.exercise.network.model.ExpandedWikiaResultSet
+import java.io.IOException
 
 class TopWikisInteractorImpl : TopWikisInteractor {
 
-    override fun fetch(limit: Int): List<TopWiki>? {
-        return mockData()
-    }
+    private val service by lazy { FandomApiService.create() }
 
-    private fun mockData(): List<TopWiki> {
-        val url = "https://avatars2.githubusercontent.com/u/1171011?s=200&v=4"
-        return mutableListOf<TopWiki>().apply {
-            add(TopWiki("Title 1", url, 100))
-            add(TopWiki("Title 2", url, 200))
-            add(TopWiki("Title 3", url, 300))
-            add(TopWiki("Title 4", url, 400))
-            add(TopWiki("Title 5", url, 500))
+    override fun fetch(limit: Int): ExpandedWikiaResultSet? {
+        return try {
+            val response = service.getTopWikis(limit).execute()
+            if(response.isSuccessful) {
+                response.body()
+            } else {
+                null
+            }
+        } catch (e: IOException) {
+            null
         }
     }
 }

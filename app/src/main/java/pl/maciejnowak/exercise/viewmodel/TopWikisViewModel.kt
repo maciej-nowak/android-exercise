@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pl.maciejnowak.exercise.interactor.TopWikisInteractor
 import pl.maciejnowak.exercise.model.TopWiki
+import pl.maciejnowak.exercise.network.model.ExpandedWikiaItem
 
 class TopWikisViewModel(private val interactor: TopWikisInteractor) : ViewModel() {
 
@@ -33,16 +34,19 @@ class TopWikisViewModel(private val interactor: TopWikisInteractor) : ViewModel(
         viewModelScope.launch {
             isLoading.value = true
             val response = withContext(Dispatchers.IO) {
-                delay(3000) //mock some delay
                 interactor.fetch()
             }
             isLoading.value = false
             if(response != null) {
-                items.value = response
+                items.value = response.items.map(ExpandedWikiaItem::toPresentation)
                 error.value = false
             } else {
                 error.value = true
             }
         }
     }
+}
+
+fun ExpandedWikiaItem.toPresentation(): TopWiki {
+    return TopWiki(name, image, stats.articles)
 }

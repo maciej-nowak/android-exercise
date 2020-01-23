@@ -1,8 +1,8 @@
 package pl.maciejnowak.exercise.interactor
 
-import pl.maciejnowak.exercise.model.TopWiki
+import pl.maciejnowak.exercise.network.model.ExpandedWikiaResultSet
 
 interface TopWikisInteractor {
 
-    fun fetch(limit: Int = 30): List<TopWiki>?
+    fun fetch(limit: Int = 30): ExpandedWikiaResultSet?
 }
