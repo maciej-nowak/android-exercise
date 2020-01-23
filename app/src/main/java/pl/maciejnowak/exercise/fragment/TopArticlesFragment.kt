@@ -39,6 +39,7 @@ class TopArticlesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
         setRecyclerView()
+        error_button.setOnClickListener { viewModel.loadTopArticles() }
     }
 
     private fun setRecyclerView() {

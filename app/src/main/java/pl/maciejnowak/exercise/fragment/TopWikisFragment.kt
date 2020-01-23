@@ -37,8 +37,9 @@ class TopWikisFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setRecyclerView()
         observeViewModel()
+        setRecyclerView()
+        error_button.setOnClickListener { viewModel.loadTopWikis() }
     }
 
     private fun initViewModel() {
