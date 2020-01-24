@@ -4,6 +4,7 @@ import pl.maciejnowak.exercise.database.WikiDao
 import pl.maciejnowak.exercise.database.model.TopWiki
 import pl.maciejnowak.exercise.network.FandomService
 import pl.maciejnowak.exercise.network.model.ExpandedWikiaItem
+import java.io.IOException
 
 class WikiRepository(private val fandomService: FandomService, private val wikiDao: WikiDao) {
 
@@ -15,8 +16,16 @@ class WikiRepository(private val fandomService: FandomService, private val wikiD
     private fun refreshTopWikis() {
         //TODO replace by REFRESH_TIMEOUT
         if(wikiDao.hasWikis() == null) {
-            val response = fandomService.getTopWikis(30).execute()
-            wikiDao.save(response.body()?.items?.map(ExpandedWikiaItem::toPresentation))
+            try {
+                val response = fandomService.getTopWikis(30).execute()
+                if(response.isSuccessful) {
+                    response.body()?.items?.run { wikiDao.save(map(ExpandedWikiaItem::toPresentation)) }
+                } else {
+                    //TODO error state
+                }
+            } catch (e: IOException) {
+                //TODO error state
+            }
         }
     }
 }

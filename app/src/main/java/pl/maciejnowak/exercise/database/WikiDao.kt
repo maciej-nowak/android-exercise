@@ -13,7 +13,7 @@ interface WikiDao {
     fun loadAll(): List<TopWiki>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(wikis: List<TopWiki>?)
+    fun save(wikis: List<TopWiki>)
 
     @Query("DELETE FROM topwiki")
     fun deleteAll()
