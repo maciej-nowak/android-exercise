@@ -66,10 +66,11 @@ class TopWikisFragment : Fragment() {
 
     private fun renderLoading(isLoading: Boolean) {
         if(isLoading) {
+            empty_container.visibility = View.GONE
             error_container.visibility = View.GONE
-            progress_bar_container.visibility = View.VISIBLE
+            progressbar_container.visibility = View.VISIBLE
         } else {
-            progress_bar_container.visibility = View.GONE
+            progressbar_container.visibility = View.GONE
         }
     }
 
@@ -91,10 +92,10 @@ class TopWikisFragment : Fragment() {
     private fun setItemsVisibility() {
         adapter.run {
             if(itemCount > 0) {
-                empty_layout.visibility = View.GONE
+                empty_container.visibility = View.GONE
                 recycler_view.visibility = View.VISIBLE
             } else {
-                empty_layout.visibility = View.VISIBLE
+                empty_container.visibility = View.VISIBLE
                 recycler_view.visibility = View.GONE
             }
         }

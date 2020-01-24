@@ -12,7 +12,7 @@ import pl.maciejnowak.exercise.repository.WikiRepository
 
 class TopWikisViewModel(private val repository: WikiRepository) : ViewModel() {
 
-    private val items = MutableLiveData<List<TopWiki>>()
+    private val items = repository.items
     private val isLoading = MutableLiveData<Boolean>()
     private val error = MutableLiveData<Boolean>()
 
@@ -31,16 +31,8 @@ class TopWikisViewModel(private val repository: WikiRepository) : ViewModel() {
     fun loadTopWikis() {
         viewModelScope.launch {
             isLoading.value = true
-            val response = withContext(Dispatchers.IO) {
-                repository.getTopWikis()
-            }
+            withContext(Dispatchers.IO) { repository.reloadTopWikis() }
             isLoading.value = false
-            if(response != null) {
-                items.value = response
-                error.value = false
-            } else {
-                error.value = true
-            }
         }
     }
 }

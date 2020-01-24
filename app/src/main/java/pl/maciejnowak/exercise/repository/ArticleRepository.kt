@@ -1,5 +1,6 @@
 package pl.maciejnowak.exercise.repository
 
+import androidx.lifecycle.LiveData
 import pl.maciejnowak.exercise.database.ArticleDao
 import pl.maciejnowak.exercise.database.model.TopArticle
 import pl.maciejnowak.exercise.network.FandomService
@@ -8,12 +9,9 @@ import java.io.IOException
 
 class ArticleRepository(private val fandomService: FandomService, private val articleDao: ArticleDao) {
 
-    fun getTopArticles(): List<TopArticle>? {
-        refreshTopArticles()
-        return articleDao.loadAll()
-    }
+    val items: LiveData<List<TopArticle>> = articleDao.loadAll()
 
-    private fun refreshTopArticles() {
+    fun reloadTopArticles() {
         //TODO replace by REFRESH_TIMEOUT
         if(articleDao.hasArticles() == null) {
             try {

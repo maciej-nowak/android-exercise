@@ -1,5 +1,6 @@
 package pl.maciejnowak.exercise.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -10,7 +11,7 @@ import pl.maciejnowak.exercise.database.model.TopArticle
 interface ArticleDao {
 
     @Query("SELECT * FROM toparticle")
-    fun loadAll(): List<TopArticle>?
+    fun loadAll(): LiveData<List<TopArticle>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(articles: List<TopArticle>)

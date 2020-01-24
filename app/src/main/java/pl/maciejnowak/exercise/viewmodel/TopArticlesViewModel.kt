@@ -12,7 +12,7 @@ import pl.maciejnowak.exercise.repository.ArticleRepository
 
 class TopArticlesViewModel(private val repository: ArticleRepository) : ViewModel() {
 
-    private val items = MutableLiveData<List<TopArticle>>()
+    private val items = repository.items
     private val isLoading = MutableLiveData<Boolean>()
     private val error = MutableLiveData<Boolean>()
 
@@ -31,16 +31,8 @@ class TopArticlesViewModel(private val repository: ArticleRepository) : ViewMode
     fun loadTopArticles() {
         viewModelScope.launch {
             isLoading.value = true
-            val response = withContext(Dispatchers.IO) {
-                repository.getTopArticles()
-            }
+            withContext(Dispatchers.IO) { repository.reloadTopArticles() }
             isLoading.value = false
-            if(response != null) {
-                items.value = response
-                error.value = false
-            } else {
-                error.value = true
-            }
         }
     }
 }

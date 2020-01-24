@@ -1,5 +1,6 @@
 package pl.maciejnowak.exercise.repository
 
+import androidx.lifecycle.LiveData
 import pl.maciejnowak.exercise.database.WikiDao
 import pl.maciejnowak.exercise.database.model.TopWiki
 import pl.maciejnowak.exercise.network.FandomService
@@ -8,12 +9,9 @@ import java.io.IOException
 
 class WikiRepository(private val fandomService: FandomService, private val wikiDao: WikiDao) {
 
-    fun getTopWikis(): List<TopWiki>? {
-        refreshTopWikis()
-        return wikiDao.loadAll()
-    }
+    val items: LiveData<List<TopWiki>> = wikiDao.loadAll()
 
-    private fun refreshTopWikis() {
+    fun reloadTopWikis() {
         //TODO replace by REFRESH_TIMEOUT
         if(wikiDao.hasWikis() == null) {
             try {

@@ -1,5 +1,6 @@
 package pl.maciejnowak.exercise.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -10,7 +11,7 @@ import pl.maciejnowak.exercise.database.model.TopWiki
 interface WikiDao {
 
     @Query("SELECT * FROM topwiki")
-    fun loadAll(): List<TopWiki>?
+    fun loadAll(): LiveData<List<TopWiki>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(wikis: List<TopWiki>)
