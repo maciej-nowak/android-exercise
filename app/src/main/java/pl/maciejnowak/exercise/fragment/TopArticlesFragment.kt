@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.layout_progress_bar.*
 import pl.maciejnowak.exercise.R
 import pl.maciejnowak.exercise.adapter.TopArticlesAdapter
 import pl.maciejnowak.exercise.interactor.TopArticlesInteractorImpl
-import pl.maciejnowak.exercise.model.TopArticle
+import pl.maciejnowak.exercise.database.model.TopArticle
 import pl.maciejnowak.exercise.viewmodel.TopArticlesViewModel
 import pl.maciejnowak.exercise.viewmodel.TopArticlesViewModelFactory
 

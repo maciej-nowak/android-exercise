@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pl.maciejnowak.exercise.interactor.TopArticlesInteractor
-import pl.maciejnowak.exercise.model.TopArticle
+import pl.maciejnowak.exercise.database.model.TopArticle
 import pl.maciejnowak.exercise.network.model.ExpandedArticle
 
 class TopArticlesViewModel(private val interactor: TopArticlesInteractor) : ViewModel() {

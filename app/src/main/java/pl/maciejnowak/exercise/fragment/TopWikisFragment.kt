@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.layout_progress_bar.*
 import pl.maciejnowak.exercise.R
 import pl.maciejnowak.exercise.adapter.TopWikisAdapter
 import pl.maciejnowak.exercise.interactor.TopWikisInteractorImpl
-import pl.maciejnowak.exercise.model.TopWiki
+import pl.maciejnowak.exercise.database.model.TopWiki
 import pl.maciejnowak.exercise.viewmodel.TopWikisViewModel
 import pl.maciejnowak.exercise.viewmodel.TopWikisViewModelFactory
 

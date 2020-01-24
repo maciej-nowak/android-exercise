@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pl.maciejnowak.exercise.interactor.TopWikisInteractor
-import pl.maciejnowak.exercise.model.TopWiki
+import pl.maciejnowak.exercise.database.model.TopWiki
 import pl.maciejnowak.exercise.network.model.ExpandedWikiaItem
 
 class TopWikisViewModel(private val interactor: TopWikisInteractor) : ViewModel() {
