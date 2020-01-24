@@ -16,8 +16,10 @@ import kotlinx.android.synthetic.main.layout_progress_bar.*
 
 import pl.maciejnowak.exercise.R
 import pl.maciejnowak.exercise.adapter.TopWikisAdapter
-import pl.maciejnowak.exercise.interactor.TopWikisInteractorImpl
+import pl.maciejnowak.exercise.database.Database
 import pl.maciejnowak.exercise.database.model.TopWiki
+import pl.maciejnowak.exercise.network.Network
+import pl.maciejnowak.exercise.repository.WikiRepository
 import pl.maciejnowak.exercise.viewmodel.TopWikisViewModel
 import pl.maciejnowak.exercise.viewmodel.TopWikisViewModelFactory
 
@@ -44,7 +46,7 @@ class TopWikisFragment : Fragment() {
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this,
-            TopWikisViewModelFactory(TopWikisInteractorImpl())
+            TopWikisViewModelFactory(WikiRepository(Network.fandomService, Database.wikiDao))
         ).get(TopWikisViewModel::class.java)
         if(viewModel.getItems().value.isNullOrEmpty()) {
             viewModel.loadTopWikis()

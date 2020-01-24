@@ -7,11 +7,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import pl.maciejnowak.exercise.interactor.TopArticlesInteractor
 import pl.maciejnowak.exercise.database.model.TopArticle
-import pl.maciejnowak.exercise.network.model.ExpandedArticle
+import pl.maciejnowak.exercise.repository.ArticleRepository
 
-class TopArticlesViewModel(private val interactor: TopArticlesInteractor) : ViewModel() {
+class TopArticlesViewModel(private val repository: ArticleRepository) : ViewModel() {
 
     private val items = MutableLiveData<List<TopArticle>>()
     private val isLoading = MutableLiveData<Boolean>()
@@ -33,19 +32,15 @@ class TopArticlesViewModel(private val interactor: TopArticlesInteractor) : View
         viewModelScope.launch {
             isLoading.value = true
             val response = withContext(Dispatchers.IO) {
-                interactor.fetch()
+                repository.getTopArticles()
             }
             isLoading.value = false
             if(response != null) {
-                items.value = response.items.map(ExpandedArticle::toPresentation)
+                items.value = response
                 error.value = false
             } else {
                 error.value = true
             }
         }
     }
-}
-
-fun ExpandedArticle.toPresentation(): TopArticle {
-    return TopArticle(id, title, revision.user, revision.timestamp)
 }

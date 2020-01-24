@@ -16,8 +16,10 @@ import kotlinx.android.synthetic.main.layout_progress_bar.*
 
 import pl.maciejnowak.exercise.R
 import pl.maciejnowak.exercise.adapter.TopArticlesAdapter
-import pl.maciejnowak.exercise.interactor.TopArticlesInteractorImpl
+import pl.maciejnowak.exercise.database.Database
 import pl.maciejnowak.exercise.database.model.TopArticle
+import pl.maciejnowak.exercise.network.Network
+import pl.maciejnowak.exercise.repository.ArticleRepository
 import pl.maciejnowak.exercise.viewmodel.TopArticlesViewModel
 import pl.maciejnowak.exercise.viewmodel.TopArticlesViewModelFactory
 
@@ -51,7 +53,7 @@ class TopArticlesFragment : Fragment() {
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this,
-            TopArticlesViewModelFactory(TopArticlesInteractorImpl())
+            TopArticlesViewModelFactory(ArticleRepository(Network.fandomService, Database.articleDao))
         ).get(TopArticlesViewModel::class.java)
         if(viewModel.getItems().value.isNullOrEmpty()) {
             viewModel.loadTopArticles()

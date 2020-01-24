@@ -7,11 +7,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import pl.maciejnowak.exercise.interactor.TopWikisInteractor
 import pl.maciejnowak.exercise.database.model.TopWiki
-import pl.maciejnowak.exercise.network.model.ExpandedWikiaItem
+import pl.maciejnowak.exercise.repository.WikiRepository
 
-class TopWikisViewModel(private val interactor: TopWikisInteractor) : ViewModel() {
+class TopWikisViewModel(private val repository: WikiRepository) : ViewModel() {
 
     private val items = MutableLiveData<List<TopWiki>>()
     private val isLoading = MutableLiveData<Boolean>()
@@ -33,19 +32,15 @@ class TopWikisViewModel(private val interactor: TopWikisInteractor) : ViewModel(
         viewModelScope.launch {
             isLoading.value = true
             val response = withContext(Dispatchers.IO) {
-                interactor.fetch()
+                repository.getTopWikis()
             }
             isLoading.value = false
             if(response != null) {
-                items.value = response.items.map(ExpandedWikiaItem::toPresentation)
+                items.value = response
                 error.value = false
             } else {
                 error.value = true
             }
         }
     }
-}
-
-fun ExpandedWikiaItem.toPresentation(): TopWiki {
-    return TopWiki(id, name, image, stats.articles)
 }
