@@ -1,6 +1,10 @@
 package pl.maciejnowak.exercise.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
+import androidx.lifecycle.map
+import kotlinx.coroutines.Dispatchers
+import pl.maciejnowak.exercise.Resource
 import pl.maciejnowak.exercise.database.WikiDao
 import pl.maciejnowak.exercise.database.model.TopWiki
 import pl.maciejnowak.exercise.network.FandomService
@@ -9,9 +13,13 @@ import java.io.IOException
 
 class WikiRepository(private val fandomService: FandomService, private val wikiDao: WikiDao) {
 
-    val items: LiveData<List<TopWiki>> = wikiDao.loadAll()
+    val resource: LiveData<Resource<List<TopWiki>>> = fetchResourceLiveData()
 
-    fun reloadTopWikis() {
+    fun fetchResourceLiveData(): LiveData<Resource<List<TopWiki>>> = liveData(Dispatchers.IO) {
+        emit(Resource.Loading())
+        val source: LiveData<Resource<List<TopWiki>>> = wikiDao.loadAll().map { Resource.Success(it) }
+        emitSource(source)
+
         //TODO replace by REFRESH_TIMEOUT
         if(wikiDao.hasWikis() == null) {
             try {
@@ -19,10 +27,10 @@ class WikiRepository(private val fandomService: FandomService, private val wikiD
                 if(response.isSuccessful) {
                     response.body()?.items?.run { wikiDao.save(map(ExpandedWikiaItem::toPresentation)) }
                 } else {
-                    //TODO error state
+                    emit(Resource.Error(message = response.message()))
                 }
             } catch (e: IOException) {
-                //TODO error state
+                emit(Resource.Error())
             }
         }
     }

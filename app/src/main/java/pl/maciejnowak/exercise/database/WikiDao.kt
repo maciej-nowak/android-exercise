@@ -14,7 +14,7 @@ interface WikiDao {
     fun loadAll(): LiveData<List<TopWiki>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(wikis: List<TopWiki>)
+    suspend fun save(wikis: List<TopWiki>)
 
     @Query("DELETE FROM topwiki")
     fun deleteAll()

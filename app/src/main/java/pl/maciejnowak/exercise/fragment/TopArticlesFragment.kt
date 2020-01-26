@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.layout_error.*
 import kotlinx.android.synthetic.main.layout_progress_bar.*
 
 import pl.maciejnowak.exercise.R
+import pl.maciejnowak.exercise.Resource
 import pl.maciejnowak.exercise.adapter.TopArticlesAdapter
 import pl.maciejnowak.exercise.database.Database
 import pl.maciejnowak.exercise.database.model.TopArticle
@@ -41,7 +42,7 @@ class TopArticlesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
         setRecyclerView()
-        error_button.setOnClickListener { viewModel.loadTopArticles() }
+        //error_button.setOnClickListener { viewModel.loadTopArticles() }
     }
 
     private fun setRecyclerView() {
@@ -55,18 +56,29 @@ class TopArticlesFragment : Fragment() {
         viewModel = ViewModelProviders.of(this,
             TopArticlesViewModelFactory(ArticleRepository(Network.fandomService, Database.articleDao))
         ).get(TopArticlesViewModel::class.java)
-        if(viewModel.getItems().value.isNullOrEmpty()) {
-            viewModel.loadTopArticles()
-        }
     }
 
     private fun observeViewModel() {
-        viewModel.getItems().observe(viewLifecycleOwner, Observer { render(it) })
-        viewModel.getIsLoading().observe(viewLifecycleOwner, Observer { renderLoading(it) })
-        viewModel.getError().observe(viewLifecycleOwner, Observer { renderError(it) })
+        viewModel.result.observe(viewLifecycleOwner, Observer { render(it) })
+    }
+
+    private fun render(result: Resource<List<TopArticle>>) {
+        when(result) {
+            is Resource.Success -> {
+                result.data?.let { render(it) }
+            }
+            is Resource.Loading -> {
+                renderLoading(true)
+            }
+            is Resource.Error -> {
+                renderError(true)
+            }
+        }
     }
 
     private fun render(items: List<TopArticle>) {
+        renderError(false)
+        renderLoading(false)
         adapter.update(items)
         setItemsVisibility()
     }
@@ -83,6 +95,7 @@ class TopArticlesFragment : Fragment() {
 
     private fun renderError(error: Boolean) {
         if(error) {
+            empty_container.visibility = View.GONE
             error_container.visibility = View.VISIBLE
         } else {
             error_container.visibility = View.GONE

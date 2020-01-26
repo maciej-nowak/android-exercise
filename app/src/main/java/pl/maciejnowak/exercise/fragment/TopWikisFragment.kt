@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.layout_error.*
 import kotlinx.android.synthetic.main.layout_progress_bar.*
 
 import pl.maciejnowak.exercise.R
+import pl.maciejnowak.exercise.Resource
 import pl.maciejnowak.exercise.adapter.TopWikisAdapter
 import pl.maciejnowak.exercise.database.Database
 import pl.maciejnowak.exercise.database.model.TopWiki
@@ -41,25 +42,36 @@ class TopWikisFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
         setRecyclerView()
-        error_button.setOnClickListener { viewModel.loadTopWikis() }
+        //error_button.setOnClickListener { viewModel.loadTopWikis() }
     }
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this,
             TopWikisViewModelFactory(WikiRepository(Network.fandomService, Database.wikiDao))
         ).get(TopWikisViewModel::class.java)
-        if(viewModel.getItems().value.isNullOrEmpty()) {
-            viewModel.loadTopWikis()
-        }
     }
 
     private fun observeViewModel() {
-        viewModel.getItems().observe(viewLifecycleOwner, Observer { render(it) })
-        viewModel.getIsLoading().observe(viewLifecycleOwner, Observer { renderLoading(it) })
-        viewModel.getError().observe(viewLifecycleOwner, Observer { renderError(it) })
+        viewModel.result.observe(viewLifecycleOwner, Observer { render(it) })
+    }
+
+    private fun render(result: Resource<List<TopWiki>>) {
+        when(result) {
+            is Resource.Success -> {
+                result.data?.let { render(it) }
+            }
+            is Resource.Loading -> {
+                renderLoading(true)
+            }
+            is Resource.Error -> {
+                renderError(true)
+            }
+        }
     }
 
     private fun render(items: List<TopWiki>) {
+        renderError(false)
+        renderLoading(false)
         adapter.update(items)
         setItemsVisibility()
     }
@@ -76,6 +88,7 @@ class TopWikisFragment : Fragment() {
 
     private fun renderError(error: Boolean) {
         if(error) {
+            empty_container.visibility = View.GONE
             error_container.visibility = View.VISIBLE
         } else {
             error_container.visibility = View.GONE

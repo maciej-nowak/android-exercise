@@ -14,7 +14,7 @@ interface ArticleDao {
     fun loadAll(): LiveData<List<TopArticle>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(articles: List<TopArticle>)
+    suspend fun save(articles: List<TopArticle>)
 
     @Query("DELETE FROM toparticle")
     fun deleteAll()
