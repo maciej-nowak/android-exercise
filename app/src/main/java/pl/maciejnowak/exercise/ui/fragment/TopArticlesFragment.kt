@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_top_wikis.*
 import kotlinx.android.synthetic.main.layout_empty.*
@@ -53,7 +53,7 @@ class TopArticlesFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this,
+        viewModel = ViewModelProvider(this,
             TopArticlesViewModelFactory(ArticleRepository(Network.fandomService, Database.articleDao))
         ).get(TopArticlesViewModel::class.java)
     }
