@@ -1,4 +1,4 @@
-package pl.maciejnowak.exercise.fragment
+package pl.maciejnowak.exercise.ui.fragment
 
 
 import android.os.Bundle
@@ -15,14 +15,14 @@ import kotlinx.android.synthetic.main.layout_error.*
 import kotlinx.android.synthetic.main.layout_progress_bar.*
 
 import pl.maciejnowak.exercise.R
-import pl.maciejnowak.exercise.Resource
-import pl.maciejnowak.exercise.adapter.TopWikisAdapter
+import pl.maciejnowak.exercise.ui.viewmodel.model.Result
+import pl.maciejnowak.exercise.ui.adapter.TopWikisAdapter
 import pl.maciejnowak.exercise.database.Database
 import pl.maciejnowak.exercise.database.model.TopWiki
 import pl.maciejnowak.exercise.network.Network
-import pl.maciejnowak.exercise.repository.WikiRepository
-import pl.maciejnowak.exercise.viewmodel.TopWikisViewModel
-import pl.maciejnowak.exercise.viewmodel.TopWikisViewModelFactory
+import pl.maciejnowak.exercise.ui.repository.WikiRepository
+import pl.maciejnowak.exercise.ui.viewmodel.TopWikisViewModel
+import pl.maciejnowak.exercise.ui.viewmodel.TopWikisViewModelFactory
 
 class TopWikisFragment : Fragment() {
 
@@ -55,11 +55,11 @@ class TopWikisFragment : Fragment() {
         viewModel.result.observe(viewLifecycleOwner, Observer { render(it) })
     }
 
-    private fun render(result: Resource<List<TopWiki>>) {
+    private fun render(result: Result<List<TopWiki>>) {
         when(result) {
-            is Resource.Success -> { result.data?.let { render(it) } }
-            is Resource.Loading -> { renderLoading(true) }
-            is Resource.Error -> { renderError(true) }
+            is pl.maciejnowak.exercise.Resource.Result.Success -> { result.data?.let { render(it) } }
+            is pl.maciejnowak.exercise.Resource.Result.Loading -> { renderLoading(true) }
+            is pl.maciejnowak.exercise.Resource.Result.Error -> { renderError(true) }
         }
     }
 

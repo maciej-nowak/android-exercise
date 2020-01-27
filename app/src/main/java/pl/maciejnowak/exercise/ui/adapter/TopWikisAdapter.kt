@@ -1,4 +1,4 @@
-package pl.maciejnowak.exercise.adapter
+package pl.maciejnowak.exercise.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater

@@ -1,11 +1,12 @@
-package pl.maciejnowak.exercise
+package pl.maciejnowak.exercise.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
-import pl.maciejnowak.exercise.adapter.MainPagerAdapter
-import pl.maciejnowak.exercise.fragment.TopArticlesFragment
-import pl.maciejnowak.exercise.fragment.TopWikisFragment
+import pl.maciejnowak.exercise.R
+import pl.maciejnowak.exercise.ui.adapter.MainPagerAdapter
+import pl.maciejnowak.exercise.ui.fragment.TopArticlesFragment
+import pl.maciejnowak.exercise.ui.fragment.TopWikisFragment
 
 class MainActivity : AppCompatActivity() {
 

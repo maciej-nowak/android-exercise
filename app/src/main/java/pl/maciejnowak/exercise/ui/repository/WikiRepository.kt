@@ -1,10 +1,10 @@
-package pl.maciejnowak.exercise.repository
+package pl.maciejnowak.exercise.ui.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.map
 import kotlinx.coroutines.Dispatchers
-import pl.maciejnowak.exercise.Resource
+import pl.maciejnowak.exercise.ui.viewmodel.model.Result
 import pl.maciejnowak.exercise.database.WikiDao
 import pl.maciejnowak.exercise.database.model.TopWiki
 import pl.maciejnowak.exercise.network.FandomService
@@ -14,10 +14,10 @@ import java.util.concurrent.TimeUnit
 
 class WikiRepository(private val fandomService: FandomService, private val wikiDao: WikiDao) {
 
-    val cache: LiveData<Resource<List<TopWiki>>> = wikiDao.loadAll().map { Resource.Success(it) }
+    val cache: LiveData<Result<List<TopWiki>>> = wikiDao.loadAll().map { Result.Success(it) }
 
     fun fetchTopWikisLiveData() = liveData(Dispatchers.IO) {
-        emit(Resource.Loading())
+        emit(Result.Loading())
         if(hasDataExpired(wikiDao.getTimeCreation())) {
             try {
                 val response = fandomService.getTopWikis(30).execute()
@@ -25,10 +25,10 @@ class WikiRepository(private val fandomService: FandomService, private val wikiD
                     response.body()?.items?.run { wikiDao.save(map(ExpandedWikiaItem::toPresentation)) }
                     emitSource(cache)
                 } else {
-                    emit(Resource.Error())
+                    emit(Result.Error())
                 }
             } catch (e: IOException) {
-                emit(Resource.Error())
+                emit(Result.Error())
             }
         } else {
             emitSource(cache)
