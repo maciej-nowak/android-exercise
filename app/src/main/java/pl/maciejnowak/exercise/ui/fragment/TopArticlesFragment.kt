@@ -64,9 +64,9 @@ class TopArticlesFragment : Fragment() {
 
     private fun render(result: Result<List<TopArticle>>) {
         when(result) {
-            is pl.maciejnowak.exercise.Resource.Result.Success -> { result.data?.let { render(it) } }
-            is pl.maciejnowak.exercise.Resource.Result.Loading -> { renderLoading(true) }
-            is pl.maciejnowak.exercise.Resource.Result.Error -> { renderError(true) }
+            is Result.Success -> { result.data?.let { render(it) } }
+            is Result.Loading -> { renderLoading(true) }
+            is Result.Error -> { renderError(true) }
         }
     }
 
