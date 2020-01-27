@@ -13,12 +13,10 @@ import java.io.IOException
 
 class WikiRepository(private val fandomService: FandomService, private val wikiDao: WikiDao) {
 
-    val resource: LiveData<Resource<List<TopWiki>>> = fetchResourceLiveData()
+    val cache: LiveData<Resource<List<TopWiki>>> = wikiDao.loadAll().map { Resource.Success(it) }
 
-    fun fetchResourceLiveData(): LiveData<Resource<List<TopWiki>>> = liveData(Dispatchers.IO) {
+    fun fetchTopWikisLiveData(): LiveData<Resource<List<TopWiki>>> = liveData(Dispatchers.IO) {
         emit(Resource.Loading())
-        val source: LiveData<Resource<List<TopWiki>>> = wikiDao.loadAll().map { Resource.Success(it) }
-        emitSource(source)
 
         //TODO replace by REFRESH_TIMEOUT
         if(wikiDao.hasWikis() == null) {
@@ -26,12 +24,15 @@ class WikiRepository(private val fandomService: FandomService, private val wikiD
                 val response = fandomService.getTopWikis(30).execute()
                 if(response.isSuccessful) {
                     response.body()?.items?.run { wikiDao.save(map(ExpandedWikiaItem::toPresentation)) }
+                    emitSource(cache)
                 } else {
-                    emit(Resource.Error(message = response.message()))
+                    emit(Resource.Error())
                 }
             } catch (e: IOException) {
                 emit(Resource.Error())
             }
+        } else {
+            emitSource(cache)
         }
     }
 }

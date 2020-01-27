@@ -13,12 +13,10 @@ import java.io.IOException
 
 class ArticleRepository(private val fandomService: FandomService, private val articleDao: ArticleDao) {
 
-    val resource: LiveData<Resource<List<TopArticle>>> = fetchResourceLiveData()
+    val cache: LiveData<Resource<List<TopArticle>>> = articleDao.loadAll().map { Resource.Success(it) }
 
-    fun fetchResourceLiveData(): LiveData<Resource<List<TopArticle>>> = liveData(Dispatchers.IO) {
+    fun fetchTopArticlesLiveData(): LiveData<Resource<List<TopArticle>>> = liveData(Dispatchers.IO) {
         emit(Resource.Loading())
-        val source: LiveData<Resource<List<TopArticle>>> = articleDao.loadAll().map { Resource.Success(it) }
-        emitSource(source)
 
         //TODO replace by REFRESH_TIMEOUT
         if(articleDao.hasArticles() == null) {
@@ -26,12 +24,15 @@ class ArticleRepository(private val fandomService: FandomService, private val ar
                 val response = fandomService.getTopArticles(30).execute()
                 if(response.isSuccessful) {
                     response.body()?.items?.run { articleDao.save(map(ExpandedArticle::toPresentation)) }
+                    emitSource(cache)
                 } else {
                     emit(Resource.Error(message = response.message()))
                 }
             } catch (e: IOException) {
                 emit(Resource.Error())
             }
+        } else {
+            emitSource(cache)
         }
     }
 }

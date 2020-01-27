@@ -42,7 +42,7 @@ class TopArticlesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
         setRecyclerView()
-        //error_button.setOnClickListener { viewModel.loadTopArticles() }
+        error_button.setOnClickListener { viewModel.loadTopArticles() }
     }
 
     private fun setRecyclerView() {
@@ -64,15 +64,9 @@ class TopArticlesFragment : Fragment() {
 
     private fun render(result: Resource<List<TopArticle>>) {
         when(result) {
-            is Resource.Success -> {
-                result.data?.let { render(it) }
-            }
-            is Resource.Loading -> {
-                renderLoading(true)
-            }
-            is Resource.Error -> {
-                renderError(true)
-            }
+            is Resource.Success -> { result.data?.let { render(it) } }
+            is Resource.Loading -> { renderLoading(true) }
+            is Resource.Error -> { renderError(true) }
         }
     }
 
@@ -95,6 +89,7 @@ class TopArticlesFragment : Fragment() {
 
     private fun renderError(error: Boolean) {
         if(error) {
+            progressbar_container.visibility = View.GONE
             empty_container.visibility = View.GONE
             error_container.visibility = View.VISIBLE
         } else {

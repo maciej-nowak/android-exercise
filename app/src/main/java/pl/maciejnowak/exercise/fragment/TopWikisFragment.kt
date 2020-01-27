@@ -42,7 +42,7 @@ class TopWikisFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
         setRecyclerView()
-        //error_button.setOnClickListener { viewModel.loadTopWikis() }
+        error_button.setOnClickListener { viewModel.loadTopWikis() }
     }
 
     private fun initViewModel() {
@@ -57,15 +57,9 @@ class TopWikisFragment : Fragment() {
 
     private fun render(result: Resource<List<TopWiki>>) {
         when(result) {
-            is Resource.Success -> {
-                result.data?.let { render(it) }
-            }
-            is Resource.Loading -> {
-                renderLoading(true)
-            }
-            is Resource.Error -> {
-                renderError(true)
-            }
+            is Resource.Success -> { result.data?.let { render(it) } }
+            is Resource.Loading -> { renderLoading(true) }
+            is Resource.Error -> { renderError(true) }
         }
     }
 
@@ -88,6 +82,7 @@ class TopWikisFragment : Fragment() {
 
     private fun renderError(error: Boolean) {
         if(error) {
+            progressbar_container.visibility = View.GONE
             empty_container.visibility = View.GONE
             error_container.visibility = View.VISIBLE
         } else {
