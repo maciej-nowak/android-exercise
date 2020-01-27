@@ -1,12 +1,11 @@
 package pl.maciejnowak.exercise.database.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class TopArticle(
-    @PrimaryKey val id: Int,
-    val title: String,
-    val user: String,
+data class TimeCreation(
+    @PrimaryKey @ColumnInfo(name = "table_name") val tableName: String,
     val timestamp: Long
 )

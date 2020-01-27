@@ -10,16 +10,15 @@ import pl.maciejnowak.exercise.database.model.TopWiki
 import pl.maciejnowak.exercise.network.FandomService
 import pl.maciejnowak.exercise.network.model.ExpandedWikiaItem
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class WikiRepository(private val fandomService: FandomService, private val wikiDao: WikiDao) {
 
     val cache: LiveData<Resource<List<TopWiki>>> = wikiDao.loadAll().map { Resource.Success(it) }
 
-    fun fetchTopWikisLiveData(): LiveData<Resource<List<TopWiki>>> = liveData(Dispatchers.IO) {
+    fun fetchTopWikisLiveData() = liveData(Dispatchers.IO) {
         emit(Resource.Loading())
-
-        //TODO replace by REFRESH_TIMEOUT
-        if(wikiDao.hasWikis() == null) {
+        if(hasDataExpired(wikiDao.getTimeCreation())) {
             try {
                 val response = fandomService.getTopWikis(30).execute()
                 if(response.isSuccessful) {
@@ -34,6 +33,10 @@ class WikiRepository(private val fandomService: FandomService, private val wikiD
         } else {
             emitSource(cache)
         }
+    }
+
+    private fun hasDataExpired(creation: Long?): Boolean {
+        return (creation == null || creation < System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1))
     }
 }
 
