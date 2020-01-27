@@ -23,7 +23,7 @@ class WikiRepository(private val fandomService: FandomService, private val wikiD
             try {
                 val response = fandomService.getTopWikis(30)
                 if(response.isSuccessful) {
-                    response.body()?.items?.run { wikiDao.save(map(ExpandedWikiaItem::toPresentation)) }
+                    response.body()?.items?.run { wikiDao.update(map(ExpandedWikiaItem::toPresentation)) }
                     emitSource(cache.asLiveData())
                 } else {
                     emit(Result.Error())
@@ -33,6 +33,26 @@ class WikiRepository(private val fandomService: FandomService, private val wikiD
             }
         } else {
             emitSource(cache.asLiveData())
+        }
+    }
+
+    //use instead of fetchTopWikisLiveData - is this correct way to manage Flow inside Repository?
+    fun fetchTopWikisFlow(): Flow<Result<List<TopWiki>>> = flow {
+        emit(Result.Loading())
+        if(hasDataExpired(wikiDao.getTimeCreation())) {
+            try {
+                val response = fandomService.getTopWikis(30)
+                if(response.isSuccessful) {
+                    response.body()?.items?.run { wikiDao.update(map(ExpandedWikiaItem::toPresentation)) }
+                    cache.collect { emit(it) }
+                } else {
+                    emit(Result.Error())
+                }
+            } catch (e: IOException) {
+                emit(Result.Error())
+            }
+        } else {
+            cache.collect { emit(it) }
         }
     }
 

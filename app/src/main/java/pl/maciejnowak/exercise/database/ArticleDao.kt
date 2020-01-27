@@ -18,7 +18,7 @@ interface ArticleDao {
     suspend fun deleteAll()
 
     @Query("SELECT timestamp FROM TimeCreation WHERE table_name LIKE 'TopArticle'")
-    fun getTimeCreation(): Long?
+    suspend fun getTimeCreation(): Long?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveTimeCreation(timeCreation: TimeCreation)

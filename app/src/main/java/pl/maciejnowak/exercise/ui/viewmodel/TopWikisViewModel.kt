@@ -1,9 +1,6 @@
 package pl.maciejnowak.exercise.ui.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.switchMap
+import androidx.lifecycle.*
 import pl.maciejnowak.exercise.ui.viewmodel.model.Result
 import pl.maciejnowak.exercise.database.model.TopWiki
 import pl.maciejnowak.exercise.ui.repository.WikiRepository
@@ -14,6 +11,7 @@ class TopWikisViewModel(private val repository: WikiRepository) : ViewModel() {
 
     val result: LiveData<Result<List<TopWiki>>> = retry.switchMap {
         repository.fetchTopWikisLiveData()
+        //or use repository.fetchTopWikisFlow().asLiveData()
     }
 
     fun loadTopWikis() {

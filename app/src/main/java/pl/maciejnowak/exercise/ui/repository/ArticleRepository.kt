@@ -24,7 +24,7 @@ class ArticleRepository(private val fandomService: FandomService, private val ar
             try {
                 val response = fandomService.getTopArticles(30)
                 if(response.isSuccessful) {
-                    response.body()?.items?.run { articleDao.save(map(ExpandedArticle::toPresentation)) }
+                    response.body()?.items?.run { articleDao.update(map(ExpandedArticle::toPresentation)) }
                     emitSource(cache.asLiveData())
                 } else {
                     emit(Result.Error())
