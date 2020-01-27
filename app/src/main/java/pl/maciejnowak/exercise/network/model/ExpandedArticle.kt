@@ -1,3 +1,3 @@
 package pl.maciejnowak.exercise.network.model
 
-data class ExpandedArticle(val title: String, val revision: Revision)
+data class ExpandedArticle(val id: Int, val title: String, val revision: Revision)
