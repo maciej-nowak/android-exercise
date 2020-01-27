@@ -1,7 +1,7 @@
 package pl.maciejnowak.exercise.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 import pl.maciejnowak.exercise.database.model.TimeCreation
 import pl.maciejnowak.exercise.database.model.TopArticle
 
@@ -9,7 +9,7 @@ import pl.maciejnowak.exercise.database.model.TopArticle
 interface ArticleDao {
 
     @Query("SELECT * FROM TopArticle")
-    fun loadAll(): LiveData<List<TopArticle>>
+    fun loadAll(): Flow<List<TopArticle>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(articles: List<TopArticle>)

@@ -1,9 +1,11 @@
 package pl.maciejnowak.exercise.ui.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
-import androidx.lifecycle.map
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import pl.maciejnowak.exercise.ui.viewmodel.model.Result
 import pl.maciejnowak.exercise.database.ArticleDao
 import pl.maciejnowak.exercise.database.model.TopArticle
@@ -13,17 +15,17 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class ArticleRepository(private val fandomService: FandomService, private val articleDao: ArticleDao) {
+    
+    val cache: Flow<Result<List<TopArticle>>> = articleDao.loadAll().map { Result.Success(it) }
 
-    val cache: LiveData<Result<List<TopArticle>>> = articleDao.loadAll().map { Result.Success(it) }
-
-    fun fetchTopArticlesLiveData() = liveData(Dispatchers.IO) {
+    fun fetchTopArticlesLiveData(): LiveData<Result<List<TopArticle>>> = liveData(Dispatchers.IO) {
         emit(Result.Loading())
         if(hasDataExpired(articleDao.getTimeCreation())) {
             try {
-                val response = fandomService.getTopArticles(30).execute()
+                val response = fandomService.getTopArticles(30)
                 if(response.isSuccessful) {
                     response.body()?.items?.run { articleDao.save(map(ExpandedArticle::toPresentation)) }
-                    emitSource(cache)
+                    emitSource(cache.asLiveData())
                 } else {
                     emit(Result.Error())
                 }
@@ -31,7 +33,7 @@ class ArticleRepository(private val fandomService: FandomService, private val ar
                 emit(Result.Error())
             }
         } else {
-            emitSource(cache)
+            emitSource(cache.asLiveData())
         }
     }
 

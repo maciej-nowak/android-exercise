@@ -1,7 +1,7 @@
 package pl.maciejnowak.exercise.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 import pl.maciejnowak.exercise.database.model.TimeCreation
 import pl.maciejnowak.exercise.database.model.TopWiki
 
@@ -9,7 +9,7 @@ import pl.maciejnowak.exercise.database.model.TopWiki
 interface WikiDao {
 
     @Query("SELECT * FROM TopWiki")
-    fun loadAll(): LiveData<List<TopWiki>>
+    fun loadAll(): Flow<List<TopWiki>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(wikis: List<TopWiki>)
