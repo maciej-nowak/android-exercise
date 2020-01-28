@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +24,7 @@ import pl.maciejnowak.exercise.network.Network
 import pl.maciejnowak.exercise.ui.repository.ArticleRepository
 import pl.maciejnowak.exercise.ui.viewmodel.TopArticlesViewModel
 import pl.maciejnowak.exercise.ui.viewmodel.TopArticlesViewModelFactory
+import pl.maciejnowak.exercise.ui.viewmodel.model.ErrorType
 
 class TopArticlesFragment : Fragment() {
 
@@ -66,7 +68,7 @@ class TopArticlesFragment : Fragment() {
         when(result) {
             is Result.Success -> { result.data?.let { render(it) } }
             is Result.Loading -> { renderLoading(true) }
-            is Result.Error -> { renderError(true) }
+            is Result.Error -> { renderError(true, result.type) }
         }
     }
 
@@ -87,11 +89,16 @@ class TopArticlesFragment : Fragment() {
         }
     }
 
-    private fun renderError(error: Boolean) {
+    private fun renderError(error: Boolean, type: ErrorType? = null) {
         if(error) {
             progressbar_container.visibility = View.GONE
-            empty_container.visibility = View.GONE
-            error_container.visibility = View.VISIBLE
+            when(type) {
+                ErrorType.REFRESH -> showMessage(R.string.refresh_data_failed)
+                else -> {
+                    empty_container.visibility = View.GONE
+                    error_container.visibility = View.VISIBLE
+                }
+            }
         } else {
             error_container.visibility = View.GONE
         }
@@ -107,6 +114,10 @@ class TopArticlesFragment : Fragment() {
                 recycler_view.visibility = View.GONE
             }
         }
+    }
+
+    private fun showMessage(resource: Int) {
+        Toast.makeText(context, resource, Toast.LENGTH_SHORT).show()
     }
 
     companion object {

@@ -17,6 +17,9 @@ interface ArticleDao {
     @Query("DELETE FROM TopArticle")
     suspend fun deleteAll()
 
+    @Query("SELECT * FROM TopArticle LIMIT 1")
+    suspend fun hasTopArticles(): TopArticle?
+
     @Query("SELECT timestamp FROM TimeCreation WHERE table_name LIKE 'TopArticle'")
     suspend fun getTimeCreation(): Long?
 

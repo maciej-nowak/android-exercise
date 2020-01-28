@@ -17,6 +17,9 @@ interface WikiDao {
     @Query("DELETE FROM TopWiki")
     suspend fun deleteAll()
 
+    @Query("SELECT * FROM TopWiki LIMIT 1")
+    suspend fun hasTopWikis(): TopWiki?
+
     @Query("SELECT timestamp FROM TimeCreation WHERE table_name LIKE 'TopWiki'")
     suspend fun getTimeCreation(): Long?
 
