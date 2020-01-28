@@ -34,7 +34,6 @@ class TopArticlesAdapter(private val context: Context, private val items: Mutabl
             title.text = item.title
             user.text = item.user
             date.text = formatter.format(item.timestamp * TimeUnit.SECONDS.toMillis(1))
-
         }
     }
 

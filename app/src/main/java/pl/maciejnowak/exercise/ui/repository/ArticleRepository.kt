@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 
 class ArticleRepository(private val fandomService: FandomService, private val articleDao: ArticleDao) {
     
-    val cache: Flow<Result<List<TopArticle>>> = articleDao.loadAll().map { Result.Success(it) }
+    val cache: Flow<Result<List<TopArticle>>> = articleDao.loadTopArticles().map { Result.Success(it) }
 
     fun fetchTopArticlesLiveData(): LiveData<Result<List<TopArticle>>> = liveData(Dispatchers.IO) {
         emit(Result.Loading())

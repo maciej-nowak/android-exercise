@@ -9,13 +9,13 @@ import pl.maciejnowak.exercise.database.model.TopWiki
 interface WikiDao {
 
     @Query("SELECT * FROM TopWiki")
-    fun loadAll(): Flow<List<TopWiki>>
+    fun loadTopWikis(): Flow<List<TopWiki>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(wikis: List<TopWiki>)
 
     @Query("DELETE FROM TopWiki")
-    suspend fun deleteAll()
+    suspend fun deleteTopWikis()
 
     @Query("SELECT * FROM TopWiki LIMIT 1")
     suspend fun hasTopWikis(): TopWiki?
@@ -28,7 +28,7 @@ interface WikiDao {
 
     @Transaction
     suspend fun update(wikis: List<TopWiki>) {
-        deleteAll()
+        deleteTopWikis()
         save(wikis)
         saveTimeCreation(TimeCreation("TopWiki", System.currentTimeMillis()))
     }

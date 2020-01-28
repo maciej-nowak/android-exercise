@@ -9,13 +9,13 @@ import pl.maciejnowak.exercise.database.model.TopArticle
 interface ArticleDao {
 
     @Query("SELECT * FROM TopArticle")
-    fun loadAll(): Flow<List<TopArticle>>
+    fun loadTopArticles(): Flow<List<TopArticle>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(articles: List<TopArticle>)
 
     @Query("DELETE FROM TopArticle")
-    suspend fun deleteAll()
+    suspend fun deleteTopArticles()
 
     @Query("SELECT * FROM TopArticle LIMIT 1")
     suspend fun hasTopArticles(): TopArticle?
@@ -28,7 +28,7 @@ interface ArticleDao {
 
     @Transaction
     suspend fun update(articles: List<TopArticle>) {
-        deleteAll()
+        deleteTopArticles()
         save(articles)
         saveTimeCreation(TimeCreation("TopArticle", System.currentTimeMillis()))
     }

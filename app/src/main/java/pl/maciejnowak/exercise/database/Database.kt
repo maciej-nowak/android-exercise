@@ -10,6 +10,5 @@ object Database {
         .build()
 
     val wikiDao = appDatabase.wikiDao()
-
     val articleDao = appDatabase.articleDao()
 }
