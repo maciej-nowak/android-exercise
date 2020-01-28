@@ -1,4 +1,4 @@
-package pl.maciejnowak.exercise.adapter
+package pl.maciejnowak.exercise.ui.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

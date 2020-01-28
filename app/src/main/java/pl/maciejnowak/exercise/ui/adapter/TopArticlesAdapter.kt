@@ -1,4 +1,4 @@
-package pl.maciejnowak.exercise.adapter
+package pl.maciejnowak.exercise.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import pl.maciejnowak.exercise.R
-import pl.maciejnowak.exercise.model.TopArticle
+import pl.maciejnowak.exercise.database.model.TopArticle
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class TopArticlesAdapter(private val context: Context, private val items: MutableList<TopArticle> = mutableListOf())
     : RecyclerView.Adapter<TopArticlesAdapter.ViewHolder>() {
@@ -32,8 +33,7 @@ class TopArticlesAdapter(private val context: Context, private val items: Mutabl
         holder.apply {
             title.text = item.title
             user.text = item.user
-            date.text = formatter.format(item.timestamp)
-
+            date.text = formatter.format(item.timestamp * TimeUnit.SECONDS.toMillis(1))
         }
     }
 
@@ -44,5 +44,6 @@ class TopArticlesAdapter(private val context: Context, private val items: Mutabl
     fun update(items: List<TopArticle>) {
         this.items.clear()
         this.items.addAll(items)
+        notifyDataSetChanged()
     }
 }

@@ -1,4 +1,4 @@
-package pl.maciejnowak.exercise.adapter
+package pl.maciejnowak.exercise.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import pl.maciejnowak.exercise.R
-import pl.maciejnowak.exercise.model.TopWiki
+import pl.maciejnowak.exercise.database.model.TopWiki
 
 class TopWikisAdapter(private val context: Context, private val items: MutableList<TopWiki> = mutableListOf())
     : RecyclerView.Adapter<TopWikisAdapter.ViewHolder>() {
@@ -49,5 +49,6 @@ class TopWikisAdapter(private val context: Context, private val items: MutableLi
     fun update(items: List<TopWiki>) {
         this.items.clear()
         this.items.addAll(items)
+        notifyDataSetChanged()
     }
 }
