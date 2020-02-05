@@ -14,7 +14,12 @@ class TopWikisViewModel(private val repository: WikiRepository) : ViewModel() {
         repository.fetchTopWikisFlow().asLiveData(Dispatchers.IO)
     }
 
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(true)
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
+
     fun loadTopWikis() {
+        _isLoading.value = true
         retry.value = true
     }
 }

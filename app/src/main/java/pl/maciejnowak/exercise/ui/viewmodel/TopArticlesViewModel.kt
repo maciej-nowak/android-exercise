@@ -14,7 +14,12 @@ class TopArticlesViewModel(private val repository: ArticleRepository) : ViewMode
         repository.fetchTopArticlesFlow().asLiveData(Dispatchers.IO)
     }
 
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(true)
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
+
     fun loadTopArticles() {
+        _isLoading.value = true
         retry.value = true
     }
 }

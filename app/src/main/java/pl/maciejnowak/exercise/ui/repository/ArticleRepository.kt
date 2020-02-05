@@ -18,7 +18,6 @@ class ArticleRepository(private val fandomService: FandomService, private val ar
     val cache: Flow<Result<List<TopArticle>>> = articleDao.loadTopArticlesFlow().map { Result.Success(it) }
 
     fun fetchTopArticlesFlow(): Flow<Result<List<TopArticle>>> = flow {
-        emit(Result.Loading())
         if(articleDao.hasTopArticles() != null) {
             cache.collect { emit(it) }
             if(hasDataExpired(articleDao.getTimeCreation()) && !fetchTopArticlesRemote()) {

@@ -15,7 +15,6 @@ class WikiRepository(private val fandomService: FandomService, private val wikiD
     val cache: Flow<Result<List<TopWiki>>> = wikiDao.loadTopWikisFlow().map { Result.Success(it) }
 
     fun fetchTopWikisFlow(): Flow<Result<List<TopWiki>>> = flow {
-        emit(Result.Loading())
         if(wikiDao.hasTopWikis() != null) {
             cache.collect { emit(it) }
             if(hasDataExpired(wikiDao.getTimeCreation()) && !fetchTopWikisRemote()) {

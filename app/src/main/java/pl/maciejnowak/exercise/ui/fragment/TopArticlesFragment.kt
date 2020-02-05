@@ -62,6 +62,7 @@ class TopArticlesFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.result.observe(viewLifecycleOwner, Observer { render(it) })
+        viewModel.isLoading.observe(viewLifecycleOwner, Observer { renderLoading(it) })
     }
 
     private fun render(result: Result<List<TopArticle>>) {
