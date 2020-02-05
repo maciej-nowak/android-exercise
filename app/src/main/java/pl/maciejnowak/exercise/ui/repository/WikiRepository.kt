@@ -4,9 +4,10 @@ import kotlinx.coroutines.flow.*
 import pl.maciejnowak.exercise.database.WikiDao
 import pl.maciejnowak.exercise.database.model.TopWiki
 import pl.maciejnowak.exercise.network.FandomService
+import pl.maciejnowak.exercise.network.Network
+import pl.maciejnowak.exercise.network.Result
 import pl.maciejnowak.exercise.network.model.ExpandedWikiaItem
 import pl.maciejnowak.exercise.ui.viewmodel.model.TopWikisResult
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class WikiRepository(private val fandomService: FandomService, private val wikiDao: WikiDao) {
@@ -29,16 +30,12 @@ class WikiRepository(private val fandomService: FandomService, private val wikiD
     }
 
     private suspend fun fetchTopWikisRemote(): Boolean {
-        return try {
-            val response = fandomService.getTopWikis(30)
-            if(response.isSuccessful) {
-                response.body()?.items?.run { wikiDao.update(map(ExpandedWikiaItem::toPresentation)) }
+        return when(val result = Network.invoke { fandomService.getTopWikis(30) }) {
+            is Result.Success -> {
+                result.body.items.run { wikiDao.update(map(ExpandedWikiaItem::toPresentation)) }
                 true
-            } else {
-                false
             }
-        } catch (e: IOException) {
-            false
+            is Result.Error -> false
         }
     }
 }
@@ -46,3 +43,4 @@ class WikiRepository(private val fandomService: FandomService, private val wikiD
 fun ExpandedWikiaItem.toPresentation(): TopWiki {
     return TopWiki(id, name, image, stats.articles)
 }
+

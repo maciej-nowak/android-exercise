@@ -1,5 +1,6 @@
 package pl.maciejnowak.exercise.ui.repository
 
+import androidx.lifecycle.Transformations.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
@@ -7,9 +8,10 @@ import kotlinx.coroutines.flow.map
 import pl.maciejnowak.exercise.database.ArticleDao
 import pl.maciejnowak.exercise.database.model.TopArticle
 import pl.maciejnowak.exercise.network.FandomService
+import pl.maciejnowak.exercise.network.Network
+import pl.maciejnowak.exercise.network.Result
 import pl.maciejnowak.exercise.network.model.ExpandedArticle
 import pl.maciejnowak.exercise.ui.viewmodel.model.TopArticlesResult
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class ArticleRepository(private val fandomService: FandomService, private val articleDao: ArticleDao) {
@@ -32,16 +34,12 @@ class ArticleRepository(private val fandomService: FandomService, private val ar
     }
 
     private suspend fun fetchTopArticlesRemote(): Boolean {
-        return try {
-            val response = fandomService.getTopArticles(30)
-            if(response.isSuccessful) {
-                response.body()?.items?.run { articleDao.update(map(ExpandedArticle::toPresentation)) }
+        return when(val result = Network.invoke { fandomService.getTopArticles(30) }) {
+            is Result.Success -> {
+                result.body.items.run { articleDao.update(map(ExpandedArticle::toPresentation)) }
                 true
-            } else {
-                false
             }
-        } catch (e: IOException) {
-            false
+            is Result.Error -> false
         }
     }
 }
