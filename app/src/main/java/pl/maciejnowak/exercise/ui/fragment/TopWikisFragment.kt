@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.layout_error.*
 import kotlinx.android.synthetic.main.layout_progress_bar.*
 
 import pl.maciejnowak.exercise.R
-import pl.maciejnowak.exercise.ui.viewmodel.model.Result
 import pl.maciejnowak.exercise.ui.adapter.TopWikisAdapter
 import pl.maciejnowak.exercise.database.Database
 import pl.maciejnowak.exercise.database.model.TopWiki
@@ -24,7 +23,7 @@ import pl.maciejnowak.exercise.network.Network
 import pl.maciejnowak.exercise.ui.repository.WikiRepository
 import pl.maciejnowak.exercise.ui.viewmodel.TopWikisViewModel
 import pl.maciejnowak.exercise.ui.viewmodel.TopWikisViewModelFactory
-import pl.maciejnowak.exercise.ui.viewmodel.model.ErrorType
+import pl.maciejnowak.exercise.ui.viewmodel.model.TopWikisResult
 
 class TopWikisFragment : Fragment() {
 
@@ -58,15 +57,16 @@ class TopWikisFragment : Fragment() {
         viewModel.isLoading.observe(viewLifecycleOwner, Observer { renderLoading(it) })
     }
 
-    private fun render(result: Result<List<TopWiki>>) {
+    private fun render(result: TopWikisResult) {
         when(result) {
-            is Result.Success -> { result.data?.let { renderSuccess(it) } }
-            is Result.Error -> { renderError(true, result.type) }
+            is TopWikisResult.Success -> { renderSuccess(result.list) }
+            is TopWikisResult.Error -> { renderError() }
+            is TopWikisResult.ErrorRefresh -> { renderErrorRefresh() }
         }
     }
 
     private fun renderSuccess(items: List<TopWiki>) {
-        renderError(false)
+        error_container.visibility = View.GONE
         renderLoading(false)
         adapter.update(items)
         setItemsVisibility()
@@ -82,19 +82,15 @@ class TopWikisFragment : Fragment() {
         }
     }
 
-    private fun renderError(error: Boolean, type: ErrorType? = null) {
-        if(error) {
-            progressbar_container.visibility = View.GONE
-            when(type) {
-                ErrorType.REFRESH -> showMessage(R.string.refresh_data_failed)
-                else -> {
-                    empty_container.visibility = View.GONE
-                    error_container.visibility = View.VISIBLE
-                }
-            }
-        } else {
-            error_container.visibility = View.GONE
-        }
+    private fun renderError() {
+        progressbar_container.visibility = View.GONE
+        empty_container.visibility = View.GONE
+        error_container.visibility = View.VISIBLE
+    }
+
+    private fun renderErrorRefresh() {
+        progressbar_container.visibility = View.GONE
+        showMessage(R.string.refresh_data_failed)
     }
 
     private fun setRecyclerView() {

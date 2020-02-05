@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.layout_error.*
 import kotlinx.android.synthetic.main.layout_progress_bar.*
 
 import pl.maciejnowak.exercise.R
-import pl.maciejnowak.exercise.ui.viewmodel.model.Result
 import pl.maciejnowak.exercise.ui.adapter.TopArticlesAdapter
 import pl.maciejnowak.exercise.database.Database
 import pl.maciejnowak.exercise.database.model.TopArticle
@@ -24,7 +23,7 @@ import pl.maciejnowak.exercise.network.Network
 import pl.maciejnowak.exercise.ui.repository.ArticleRepository
 import pl.maciejnowak.exercise.ui.viewmodel.TopArticlesViewModel
 import pl.maciejnowak.exercise.ui.viewmodel.TopArticlesViewModelFactory
-import pl.maciejnowak.exercise.ui.viewmodel.model.ErrorType
+import pl.maciejnowak.exercise.ui.viewmodel.model.TopArticlesResult
 
 class TopArticlesFragment : Fragment() {
 
@@ -65,15 +64,16 @@ class TopArticlesFragment : Fragment() {
         viewModel.isLoading.observe(viewLifecycleOwner, Observer { renderLoading(it) })
     }
 
-    private fun render(result: Result<List<TopArticle>>) {
+    private fun render(result: TopArticlesResult) {
         when(result) {
-            is Result.Success -> { result.data?.let { renderSuccess(it) } }
-            is Result.Error -> { renderError(true, result.type) }
+            is TopArticlesResult.Success -> { renderSuccess(result.list) }
+            is TopArticlesResult.Error -> { renderError() }
+            is TopArticlesResult.ErrorRefresh -> { renderErrorRefresh() }
         }
     }
 
     private fun renderSuccess(items: List<TopArticle>) {
-        renderError(false)
+        error_container.visibility = View.GONE
         renderLoading(false)
         adapter.update(items)
         setItemsVisibility()
@@ -89,19 +89,15 @@ class TopArticlesFragment : Fragment() {
         }
     }
 
-    private fun renderError(error: Boolean, type: ErrorType? = null) {
-        if(error) {
-            progressbar_container.visibility = View.GONE
-            when(type) {
-                ErrorType.REFRESH -> showMessage(R.string.refresh_data_failed)
-                else -> {
-                    empty_container.visibility = View.GONE
-                    error_container.visibility = View.VISIBLE
-                }
-            }
-        } else {
-            error_container.visibility = View.GONE
-        }
+    private fun renderError() {
+        progressbar_container.visibility = View.GONE
+        empty_container.visibility = View.GONE
+        error_container.visibility = View.VISIBLE
+    }
+
+    private fun renderErrorRefresh() {
+        progressbar_container.visibility = View.GONE
+        showMessage(R.string.refresh_data_failed)
     }
 
     private fun setItemsVisibility() {
