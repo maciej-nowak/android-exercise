@@ -9,7 +9,10 @@ import pl.maciejnowak.exercise.database.model.TopWiki
 interface WikiDao {
 
     @Query("SELECT * FROM TopWiki")
-    fun loadTopWikis(): Flow<List<TopWiki>>
+    fun loadTopWikisFlow(): Flow<List<TopWiki>>
+
+    @Query("SELECT * FROM TopWiki")
+    suspend fun loadTopWikis(): List<TopWiki>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(wikis: List<TopWiki>)

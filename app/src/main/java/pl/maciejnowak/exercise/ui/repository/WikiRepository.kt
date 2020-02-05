@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 
 class WikiRepository(private val fandomService: FandomService, private val wikiDao: WikiDao) {
 
-    val cache: Flow<Result<List<TopWiki>>> = wikiDao.loadTopWikis().map { Result.Success(it) }
+    val cache: Flow<Result<List<TopWiki>>> = wikiDao.loadTopWikisFlow().map { Result.Success(it) }
 
     fun fetchTopWikisLiveData(): LiveData<Result<List<TopWiki>>> = liveData(Dispatchers.IO) {
         emit(Result.Loading())

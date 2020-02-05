@@ -9,7 +9,10 @@ import pl.maciejnowak.exercise.database.model.TopArticle
 interface ArticleDao {
 
     @Query("SELECT * FROM TopArticle")
-    fun loadTopArticles(): Flow<List<TopArticle>>
+    fun loadTopArticlesFlow(): Flow<List<TopArticle>>
+
+    @Query("SELECT * FROM TopArticle")
+    suspend fun loadTopArticles(): List<TopArticle>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(articles: List<TopArticle>)
