@@ -68,7 +68,6 @@ class TopArticlesFragment : Fragment() {
     private fun render(result: Result<List<TopArticle>>) {
         when(result) {
             is Result.Success -> { result.data?.let { renderSuccess(it) } }
-            is Result.Loading -> { renderLoading(true) }
             is Result.Error -> { renderError(true, result.type) }
         }
     }

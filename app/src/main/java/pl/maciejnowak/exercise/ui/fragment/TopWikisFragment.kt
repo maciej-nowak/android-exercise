@@ -61,7 +61,6 @@ class TopWikisFragment : Fragment() {
     private fun render(result: Result<List<TopWiki>>) {
         when(result) {
             is Result.Success -> { result.data?.let { renderSuccess(it) } }
-            is Result.Loading -> { renderLoading(true) }
             is Result.Error -> { renderError(true, result.type) }
         }
     }
