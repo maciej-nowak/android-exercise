@@ -1,9 +1,5 @@
 package pl.maciejnowak.exercise.ui.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.liveData
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import pl.maciejnowak.exercise.ui.viewmodel.model.Result
 import pl.maciejnowak.exercise.database.WikiDao
@@ -18,20 +14,6 @@ class WikiRepository(private val fandomService: FandomService, private val wikiD
 
     val cache: Flow<Result<List<TopWiki>>> = wikiDao.loadTopWikisFlow().map { Result.Success(it) }
 
-    fun fetchTopWikisLiveData(): LiveData<Result<List<TopWiki>>> = liveData(Dispatchers.IO) {
-        emit(Result.Loading())
-        if(wikiDao.hasTopWikis() != null) {
-            emitSource(cache.asLiveData())
-            if(hasDataExpired(wikiDao.getTimeCreation()) && !fetchTopWikisRemote()) {
-                emit(Result.Error(ErrorType.REFRESH))
-                emitSource(cache.asLiveData())
-            }
-        } else {
-            if(fetchTopWikisRemote()) emitSource(cache.asLiveData()) else emit(Result.Error())
-        }
-    }
-
-    //use instead of fetchTopWikisLiveData - is this right way to manage Flow inside Repository?
     fun fetchTopWikisFlow(): Flow<Result<List<TopWiki>>> = flow {
         emit(Result.Loading())
         if(wikiDao.hasTopWikis() != null) {
@@ -46,7 +28,7 @@ class WikiRepository(private val fandomService: FandomService, private val wikiD
     }
 
     private fun hasDataExpired(creation: Long?): Boolean {
-        return (creation == null || creation < System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1))
+        return (creation == null || creation < System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1))
     }
 
     private suspend fun fetchTopWikisRemote(): Boolean {

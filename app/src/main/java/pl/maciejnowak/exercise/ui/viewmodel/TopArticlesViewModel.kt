@@ -1,9 +1,7 @@
 package pl.maciejnowak.exercise.ui.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.switchMap
+import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
 import pl.maciejnowak.exercise.ui.viewmodel.model.Result
 import pl.maciejnowak.exercise.database.model.TopArticle
 import pl.maciejnowak.exercise.ui.repository.ArticleRepository
@@ -13,7 +11,7 @@ class TopArticlesViewModel(private val repository: ArticleRepository) : ViewMode
     private val retry: MutableLiveData<Boolean> = MutableLiveData(true)
 
     val result: LiveData<Result<List<TopArticle>>> = retry.switchMap {
-        repository.fetchTopArticlesLiveData()
+        repository.fetchTopArticlesFlow().asLiveData(Dispatchers.IO)
     }
 
     fun loadTopArticles() {

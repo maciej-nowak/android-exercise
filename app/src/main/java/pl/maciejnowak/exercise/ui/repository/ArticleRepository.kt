@@ -1,10 +1,8 @@
 package pl.maciejnowak.exercise.ui.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.liveData
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import pl.maciejnowak.exercise.ui.viewmodel.model.Result
 import pl.maciejnowak.exercise.database.ArticleDao
@@ -19,21 +17,21 @@ class ArticleRepository(private val fandomService: FandomService, private val ar
     
     val cache: Flow<Result<List<TopArticle>>> = articleDao.loadTopArticlesFlow().map { Result.Success(it) }
 
-    fun fetchTopArticlesLiveData(): LiveData<Result<List<TopArticle>>> = liveData(Dispatchers.IO) {
+    fun fetchTopArticlesFlow(): Flow<Result<List<TopArticle>>> = flow {
         emit(Result.Loading())
         if(articleDao.hasTopArticles() != null) {
-            emitSource(cache.asLiveData())
+            cache.collect { emit(it) }
             if(hasDataExpired(articleDao.getTimeCreation()) && !fetchTopArticlesRemote()) {
                 emit(Result.Error(ErrorType.REFRESH))
-                emitSource(cache.asLiveData())
+                cache.collect { emit(it) }
             }
         } else {
-            if(fetchTopArticlesRemote()) emitSource(cache.asLiveData()) else emit(Result.Error())
+            if(fetchTopArticlesRemote()) cache.collect { emit(it) } else emit(Result.Error())
         }
     }
 
     private fun hasDataExpired(creation: Long?): Boolean {
-        return (creation == null || creation < System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1))
+        return (creation == null || creation < System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1))
     }
 
     private suspend fun fetchTopArticlesRemote(): Boolean {
