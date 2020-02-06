@@ -7,10 +7,15 @@ import pl.maciejnowak.exercise.network.FandomService
 import pl.maciejnowak.exercise.network.Network
 import pl.maciejnowak.exercise.network.Result
 import pl.maciejnowak.exercise.network.model.ExpandedWikiaItem
+import pl.maciejnowak.exercise.ui.mapper.ListMapper
+import pl.maciejnowak.exercise.ui.mapper.ListMapperImpl
+import pl.maciejnowak.exercise.ui.mapper.WikiRepositoryMapper
 import pl.maciejnowak.exercise.ui.viewmodel.model.TopWikisResult
 import java.util.concurrent.TimeUnit
 
 class WikiRepository(private val fandomService: FandomService, private val wikiDao: WikiDao) {
+
+    private val mapper: ListMapper<ExpandedWikiaItem, TopWiki> = ListMapperImpl(WikiRepositoryMapper())
 
     val cache: Flow<TopWikisResult> = wikiDao.loadTopWikisFlow().map { TopWikisResult.Success(it) }
 
@@ -32,15 +37,11 @@ class WikiRepository(private val fandomService: FandomService, private val wikiD
     private suspend fun fetchTopWikisRemote(): Boolean {
         return when(val result = Network.invoke { fandomService.getTopWikis(30) }) {
             is Result.Success -> {
-                result.body.items.run { wikiDao.update(map(ExpandedWikiaItem::toPresentation)) }
+                wikiDao.update(mapper.map(result.body.items))
                 true
             }
             is Result.Error -> false
         }
     }
-}
-
-fun ExpandedWikiaItem.toPresentation(): TopWiki {
-    return TopWiki(id, name, image, stats.articles)
 }
 

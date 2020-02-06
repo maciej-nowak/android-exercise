@@ -1,6 +1,5 @@
 package pl.maciejnowak.exercise.ui.repository
 
-import androidx.lifecycle.Transformations.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
@@ -11,10 +10,15 @@ import pl.maciejnowak.exercise.network.FandomService
 import pl.maciejnowak.exercise.network.Network
 import pl.maciejnowak.exercise.network.Result
 import pl.maciejnowak.exercise.network.model.ExpandedArticle
+import pl.maciejnowak.exercise.ui.mapper.ArticleRepositoryMapper
+import pl.maciejnowak.exercise.ui.mapper.ListMapper
+import pl.maciejnowak.exercise.ui.mapper.ListMapperImpl
 import pl.maciejnowak.exercise.ui.viewmodel.model.TopArticlesResult
 import java.util.concurrent.TimeUnit
 
 class ArticleRepository(private val fandomService: FandomService, private val articleDao: ArticleDao) {
+
+    private val mapper: ListMapper<ExpandedArticle, TopArticle> = ListMapperImpl(ArticleRepositoryMapper())
     
     val cache: Flow<TopArticlesResult> = articleDao.loadTopArticlesFlow().map { TopArticlesResult.Success(it) }
 
@@ -36,14 +40,10 @@ class ArticleRepository(private val fandomService: FandomService, private val ar
     private suspend fun fetchTopArticlesRemote(): Boolean {
         return when(val result = Network.invoke { fandomService.getTopArticles(30) }) {
             is Result.Success -> {
-                result.body.items.run { articleDao.update(map(ExpandedArticle::toPresentation)) }
+                articleDao.update(mapper.map(result.body.items))
                 true
             }
             is Result.Error -> false
         }
     }
-}
-
-fun ExpandedArticle.toPresentation(): TopArticle {
-    return TopArticle(id, title, revision.user, revision.timestamp)
 }
