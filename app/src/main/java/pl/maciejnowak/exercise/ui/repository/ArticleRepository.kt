@@ -1,9 +1,6 @@
 package pl.maciejnowak.exercise.ui.repository
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import pl.maciejnowak.exercise.database.ArticleDao
 import pl.maciejnowak.exercise.database.model.TopArticle
 import pl.maciejnowak.exercise.network.FandomService
@@ -26,9 +23,9 @@ class ArticleRepository(
             if(hasDataExpired(articleDao.getTimeCreation()) && !fetchTopArticlesRemote()) {
                 emit(TopArticlesResult.ErrorRefresh)
             }
-            cache.collect { emit(it) }
+            emitAll(cache)
         } else {
-            if(fetchTopArticlesRemote()) cache.collect { emit(it) } else emit(TopArticlesResult.Error)
+            if(fetchTopArticlesRemote()) emitAll(cache) else emit(TopArticlesResult.Error)
         }
     }
 

@@ -23,9 +23,10 @@ class WikiRepository(
             if(hasDataExpired(wikiDao.getTimeCreation()) && !fetchTopWikisRemote()) {
                 emit(TopWikisResult.ErrorRefresh)
             }
-            cache.collect { emit(it) }
+            wikiDao.loadTopWikis()
+            emitAll(cache)
         } else {
-            if(fetchTopWikisRemote()) cache.collect { emit(it) } else emit(TopWikisResult.Error)
+            if(fetchTopWikisRemote()) emitAll(cache) else emit(TopWikisResult.Error)
         }
     }
 
