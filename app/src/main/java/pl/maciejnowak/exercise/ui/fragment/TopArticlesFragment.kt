@@ -20,6 +20,7 @@ import pl.maciejnowak.exercise.ui.adapter.TopArticlesAdapter
 import pl.maciejnowak.exercise.database.Database
 import pl.maciejnowak.exercise.database.model.TopArticle
 import pl.maciejnowak.exercise.network.Network
+import pl.maciejnowak.exercise.ui.mapper.TopArticleMapper
 import pl.maciejnowak.exercise.ui.repository.ArticleRepository
 import pl.maciejnowak.exercise.ui.viewmodel.TopArticlesViewModel
 import pl.maciejnowak.exercise.ui.viewmodel.TopArticlesViewModelFactory
@@ -55,7 +56,7 @@ class TopArticlesFragment : Fragment() {
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this,
-            TopArticlesViewModelFactory(ArticleRepository(Network.fandomService, Database.articleDao))
+            TopArticlesViewModelFactory(ArticleRepository(Network.fandomService, Database.articleDao, TopArticleMapper()))
         ).get(TopArticlesViewModel::class.java)
     }
 

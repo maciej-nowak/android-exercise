@@ -10,16 +10,15 @@ import pl.maciejnowak.exercise.network.FandomService
 import pl.maciejnowak.exercise.network.Network
 import pl.maciejnowak.exercise.network.Result
 import pl.maciejnowak.exercise.network.model.ExpandedArticle
-import pl.maciejnowak.exercise.ui.mapper.ArticleRepositoryMapper
-import pl.maciejnowak.exercise.ui.mapper.ListMapper
-import pl.maciejnowak.exercise.ui.mapper.ListMapperImpl
+import pl.maciejnowak.exercise.ui.mapper.Mapper
 import pl.maciejnowak.exercise.ui.viewmodel.model.TopArticlesResult
 import java.util.concurrent.TimeUnit
 
-class ArticleRepository(private val fandomService: FandomService, private val articleDao: ArticleDao) {
+class ArticleRepository(
+    private val fandomService: FandomService,
+    private val articleDao: ArticleDao,
+    private val mapper: Mapper<ExpandedArticle, TopArticle>) {
 
-    private val mapper: ListMapper<ExpandedArticle, TopArticle> = ListMapperImpl(ArticleRepositoryMapper())
-    
     val cache: Flow<TopArticlesResult> = articleDao.loadTopArticlesFlow().map { TopArticlesResult.Success(it) }
 
     fun fetchTopArticlesFlow(): Flow<TopArticlesResult> = flow {
@@ -40,7 +39,7 @@ class ArticleRepository(private val fandomService: FandomService, private val ar
     private suspend fun fetchTopArticlesRemote(): Boolean {
         return when(val result = Network.invoke { fandomService.getTopArticles(30) }) {
             is Result.Success -> {
-                articleDao.update(mapper.map(result.body.items))
+                articleDao.update(result.body.items.map { mapper.map(it) })
                 true
             }
             is Result.Error -> false
