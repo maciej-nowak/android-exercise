@@ -11,7 +11,7 @@ import pl.maciejnowak.exercise.ui.viewmodel.model.TopArticlesResult
 
 class TopArticlesViewModel(private val repository: ArticleRepository) : ViewModel() {
 
-    private val refresh: MutableLiveData<Boolean> = MutableLiveData(true)
+    private val refresh: MutableLiveData<Boolean> = MutableLiveData(false)
 
     val result: LiveData<TopArticlesResult> = refresh.switchMap { force ->
         repository.fetchTopArticlesFlow(force).withIndex()

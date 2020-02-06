@@ -68,18 +68,18 @@ class TopWikisFragment : Fragment() {
 
     private fun renderSuccess(items: List<TopWiki>) {
         error_container.visibility = View.GONE
-        renderLoading(false)
+        swipe_refresh.visibility = View.VISIBLE
         adapter.update(items)
         setItemsVisibility()
     }
 
     private fun renderLoading(isLoading: Boolean) {
         if(isLoading) {
-            empty_container.visibility = View.GONE
             error_container.visibility = View.GONE
             if(viewModel.result.value is TopWikisResult.Success) {
                 swipe_refresh.isRefreshing = true
             } else {
+                empty_container.visibility = View.GONE
                 progressbar_container.visibility = View.VISIBLE
             }
         } else {
@@ -89,13 +89,12 @@ class TopWikisFragment : Fragment() {
     }
 
     private fun renderError() {
-        progressbar_container.visibility = View.GONE
+        swipe_refresh.visibility = View.GONE
         empty_container.visibility = View.GONE
         error_container.visibility = View.VISIBLE
     }
 
     private fun renderErrorRefresh() {
-        progressbar_container.visibility = View.GONE
         showMessage(R.string.refresh_data_failed)
     }
 

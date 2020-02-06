@@ -11,7 +11,7 @@ import pl.maciejnowak.exercise.ui.viewmodel.model.TopWikisResult
 
 class TopWikisViewModel(private val repository: WikiRepository) : ViewModel() {
 
-    private val refresh: MutableLiveData<Boolean> = MutableLiveData(true)
+    private val refresh: MutableLiveData<Boolean> = MutableLiveData(false)
 
     val result: LiveData<TopWikisResult> = refresh.switchMap { force ->
         repository.fetchTopWikisFlow(force).withIndex()
