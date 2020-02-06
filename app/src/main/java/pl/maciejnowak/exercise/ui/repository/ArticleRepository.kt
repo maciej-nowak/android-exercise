@@ -18,9 +18,9 @@ class ArticleRepository(
 
     val cache: Flow<TopArticlesResult> = articleDao.loadTopArticlesFlow().map { TopArticlesResult.Success(it) }
 
-    fun fetchTopArticlesFlow(): Flow<TopArticlesResult> = flow {
+    fun fetchTopArticlesFlow(forceRefresh: Boolean): Flow<TopArticlesResult> = flow {
         if(articleDao.hasTopArticles() != null) {
-            if(hasDataExpired(articleDao.getTimeCreation()) && !fetchTopArticlesRemote()) {
+            if((forceRefresh || hasDataExpired(articleDao.getTimeCreation())) && !fetchTopArticlesRemote()) {
                 emit(TopArticlesResult.ErrorRefresh)
             }
             emitAll(cache)
@@ -29,11 +29,7 @@ class ArticleRepository(
         }
     }
 
-    private fun hasDataExpired(creation: Long?): Boolean {
-        return (creation == null || creation < System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1))
-    }
-
-    private suspend fun fetchTopArticlesRemote(): Boolean {
+    suspend fun fetchTopArticlesRemote(): Boolean {
         return when(val result = Network.invoke { fandomService.getTopArticles(30) }) {
             is Result.Success -> {
                 articleDao.update(result.body.items.map { mapper.map(it) })
@@ -41,5 +37,9 @@ class ArticleRepository(
             }
             is Result.Error -> false
         }
+    }
+
+    private fun hasDataExpired(creation: Long?): Boolean {
+        return (creation == null || creation < System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1))
     }
 }

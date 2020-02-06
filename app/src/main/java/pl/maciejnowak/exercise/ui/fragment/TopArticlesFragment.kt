@@ -1,6 +1,5 @@
 package pl.maciejnowak.exercise.ui.fragment
 
-
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -45,6 +44,7 @@ class TopArticlesFragment : Fragment() {
         observeViewModel()
         setRecyclerView()
         error_button.setOnClickListener { viewModel.loadTopArticles() }
+        swipe_refresh.setOnRefreshListener { viewModel.loadTopArticles(true) }
     }
 
     private fun setRecyclerView() {
@@ -84,9 +84,14 @@ class TopArticlesFragment : Fragment() {
         if(isLoading) {
             empty_container.visibility = View.GONE
             error_container.visibility = View.GONE
-            progressbar_container.visibility = View.VISIBLE
+            if(viewModel.result.value is TopArticlesResult.Success) {
+                swipe_refresh.isRefreshing = true
+            } else {
+                progressbar_container.visibility = View.VISIBLE
+            }
         } else {
             progressbar_container.visibility = View.GONE
+            swipe_refresh.isRefreshing = false
         }
     }
 

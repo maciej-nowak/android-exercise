@@ -11,10 +11,10 @@ import pl.maciejnowak.exercise.ui.viewmodel.model.TopArticlesResult
 
 class TopArticlesViewModel(private val repository: ArticleRepository) : ViewModel() {
 
-    private val retry: MutableLiveData<Boolean> = MutableLiveData(true)
+    private val refresh: MutableLiveData<Boolean> = MutableLiveData(true)
 
-    val result: LiveData<TopArticlesResult> = retry.switchMap {
-        repository.fetchTopArticlesFlow().withIndex()
+    val result: LiveData<TopArticlesResult> = refresh.switchMap { force ->
+        repository.fetchTopArticlesFlow(force).withIndex()
             .onStart { _isLoading.postValue(true) }
             .onEach { if(it.index == 0) { _isLoading.postValue(false) }}
             .map { it.value }
@@ -25,7 +25,7 @@ class TopArticlesViewModel(private val repository: ArticleRepository) : ViewMode
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
-    fun loadTopArticles() {
-        retry.value = true
+    fun loadTopArticles(forceRefresh: Boolean = false) {
+        refresh.value = forceRefresh
     }
 }

@@ -11,10 +11,10 @@ import pl.maciejnowak.exercise.ui.viewmodel.model.TopWikisResult
 
 class TopWikisViewModel(private val repository: WikiRepository) : ViewModel() {
 
-    private val retry: MutableLiveData<Boolean> = MutableLiveData(true)
+    private val refresh: MutableLiveData<Boolean> = MutableLiveData(true)
 
-    val result: LiveData<TopWikisResult> = retry.switchMap {
-        repository.fetchTopWikisFlow().withIndex()
+    val result: LiveData<TopWikisResult> = refresh.switchMap { force ->
+        repository.fetchTopWikisFlow(force).withIndex()
             .onStart { _isLoading.postValue(true) }
             .onEach { if(it.index == 0) { _isLoading.postValue(false) }}
             .map { it.value }
@@ -25,7 +25,7 @@ class TopWikisViewModel(private val repository: WikiRepository) : ViewModel() {
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
-    fun loadTopWikis() {
-        retry.value = true
+    fun loadTopWikis(forceRefresh: Boolean = false) {
+        refresh.value = forceRefresh
     }
 }

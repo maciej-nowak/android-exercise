@@ -18,23 +18,18 @@ class WikiRepository(
 
     val cache: Flow<TopWikisResult> = wikiDao.loadTopWikisFlow().map { TopWikisResult.Success(it) }
 
-    fun fetchTopWikisFlow(): Flow<TopWikisResult> = flow {
+    fun fetchTopWikisFlow(forceRefresh: Boolean): Flow<TopWikisResult> = flow {
         if(wikiDao.hasTopWikis() != null) {
-            if(hasDataExpired(wikiDao.getTimeCreation()) && !fetchTopWikisRemote()) {
+            if((forceRefresh || hasDataExpired(wikiDao.getTimeCreation())) && !fetchTopWikisRemote()) {
                 emit(TopWikisResult.ErrorRefresh)
             }
-            wikiDao.loadTopWikis()
             emitAll(cache)
         } else {
             if(fetchTopWikisRemote()) emitAll(cache) else emit(TopWikisResult.Error)
         }
     }
 
-    private fun hasDataExpired(creation: Long?): Boolean {
-        return (creation == null || creation < System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1))
-    }
-
-    private suspend fun fetchTopWikisRemote(): Boolean {
+    suspend fun fetchTopWikisRemote(): Boolean {
         return when(val result = Network.invoke { fandomService.getTopWikis(30) }) {
             is Result.Success -> {
                 wikiDao.update(result.body.items.map { mapper.map(it) })
@@ -42,6 +37,10 @@ class WikiRepository(
             }
             is Result.Error -> false
         }
+    }
+
+    private fun hasDataExpired(creation: Long?): Boolean {
+        return (creation == null || creation < System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1))
     }
 }
 
