@@ -1,56 +1,45 @@
 package pl.maciejnowak.exercise.ui.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.liveData
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import pl.maciejnowak.exercise.ui.viewmodel.model.Result
+import kotlinx.coroutines.flow.*
 import pl.maciejnowak.exercise.database.ArticleDao
 import pl.maciejnowak.exercise.database.model.TopArticle
 import pl.maciejnowak.exercise.network.FandomService
+import pl.maciejnowak.exercise.network.Network
+import pl.maciejnowak.exercise.network.Result
 import pl.maciejnowak.exercise.network.model.ExpandedArticle
-import pl.maciejnowak.exercise.ui.viewmodel.model.ErrorType
-import java.io.IOException
+import pl.maciejnowak.exercise.ui.mapper.Mapper
+import pl.maciejnowak.exercise.ui.viewmodel.model.TopArticlesResult
 import java.util.concurrent.TimeUnit
 
-class ArticleRepository(private val fandomService: FandomService, private val articleDao: ArticleDao) {
-    
-    val cache: Flow<Result<List<TopArticle>>> = articleDao.loadTopArticles().map { Result.Success(it) }
+class ArticleRepository(
+    private val fandomService: FandomService,
+    private val articleDao: ArticleDao,
+    private val mapper: Mapper<ExpandedArticle, TopArticle>) {
 
-    fun fetchTopArticlesLiveData(): LiveData<Result<List<TopArticle>>> = liveData(Dispatchers.IO) {
-        emit(Result.Loading())
+    val cache: Flow<TopArticlesResult> = articleDao.loadTopArticlesFlow().map { TopArticlesResult.Success(it) }
+
+    fun fetchTopArticlesFlow(forceRefresh: Boolean): Flow<TopArticlesResult> = flow {
         if(articleDao.hasTopArticles() != null) {
-            emitSource(cache.asLiveData())
-            if(hasDataExpired(articleDao.getTimeCreation()) && !fetchTopArticlesRemote()) {
-                emit(Result.Error(ErrorType.REFRESH))
-                emitSource(cache.asLiveData())
+            if((forceRefresh || hasDataExpired(articleDao.getTimeCreation())) && !fetchTopArticlesRemote()) {
+                emit(TopArticlesResult.ErrorRefresh)
             }
+            emitAll(cache)
         } else {
-            if(fetchTopArticlesRemote()) emitSource(cache.asLiveData()) else emit(Result.Error())
+            if(fetchTopArticlesRemote()) emitAll(cache) else emit(TopArticlesResult.Error)
+        }
+    }
+
+    suspend fun fetchTopArticlesRemote(): Boolean {
+        return when(val result = Network.invoke { fandomService.getTopArticles(30) }) {
+            is Result.Success -> {
+                articleDao.update(result.body.items.map { mapper.map(it) })
+                true
+            }
+            is Result.Error -> false
         }
     }
 
     private fun hasDataExpired(creation: Long?): Boolean {
-        return (creation == null || creation < System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1))
+        return (creation == null || creation < System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1))
     }
-
-    private suspend fun fetchTopArticlesRemote(): Boolean {
-        return try {
-            val response = fandomService.getTopArticles(30)
-            if(response.isSuccessful) {
-                response.body()?.items?.run { articleDao.update(map(ExpandedArticle::toPresentation)) }
-                true
-            } else {
-                false
-            }
-        } catch (e: IOException) {
-            false
-        }
-    }
-}
-
-fun ExpandedArticle.toPresentation(): TopArticle {
-    return TopArticle(id, title, revision.user, revision.timestamp)
 }

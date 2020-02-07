@@ -1,6 +1,5 @@
 package pl.maciejnowak.exercise.ui.fragment
 
-
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -16,15 +15,15 @@ import kotlinx.android.synthetic.main.layout_error.*
 import kotlinx.android.synthetic.main.layout_progress_bar.*
 
 import pl.maciejnowak.exercise.R
-import pl.maciejnowak.exercise.ui.viewmodel.model.Result
 import pl.maciejnowak.exercise.ui.adapter.TopWikisAdapter
 import pl.maciejnowak.exercise.database.Database
 import pl.maciejnowak.exercise.database.model.TopWiki
 import pl.maciejnowak.exercise.network.Network
+import pl.maciejnowak.exercise.ui.mapper.TopWikiMapper
 import pl.maciejnowak.exercise.ui.repository.WikiRepository
 import pl.maciejnowak.exercise.ui.viewmodel.TopWikisViewModel
 import pl.maciejnowak.exercise.ui.viewmodel.TopWikisViewModelFactory
-import pl.maciejnowak.exercise.ui.viewmodel.model.ErrorType
+import pl.maciejnowak.exercise.ui.viewmodel.model.TopWikisResult
 
 class TopWikisFragment : Fragment() {
 
@@ -45,56 +44,58 @@ class TopWikisFragment : Fragment() {
         observeViewModel()
         setRecyclerView()
         error_button.setOnClickListener { viewModel.loadTopWikis() }
+        swipe_refresh.setOnRefreshListener { viewModel.loadTopWikis(true) }
     }
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this,
-            TopWikisViewModelFactory(WikiRepository(Network.fandomService, Database.wikiDao))
+            TopWikisViewModelFactory(WikiRepository(Network.fandomService, Database.wikiDao, TopWikiMapper()))
         ).get(TopWikisViewModel::class.java)
     }
 
     private fun observeViewModel() {
         viewModel.result.observe(viewLifecycleOwner, Observer { render(it) })
+        viewModel.isLoading.observe(viewLifecycleOwner, Observer { renderLoading(it) })
     }
 
-    private fun render(result: Result<List<TopWiki>>) {
+    private fun render(result: TopWikisResult) {
         when(result) {
-            is Result.Success -> { result.data?.let { renderSuccess(it) } }
-            is Result.Loading -> { renderLoading(true) }
-            is Result.Error -> { renderError(true, result.type) }
+            is TopWikisResult.Success -> { renderSuccess(result.list) }
+            is TopWikisResult.Error -> { renderError() }
+            is TopWikisResult.ErrorRefresh -> { renderErrorRefresh() }
         }
     }
 
     private fun renderSuccess(items: List<TopWiki>) {
-        renderError(false)
-        renderLoading(false)
+        error_container.visibility = View.GONE
+        swipe_refresh.visibility = View.VISIBLE
         adapter.update(items)
         setItemsVisibility()
     }
 
     private fun renderLoading(isLoading: Boolean) {
         if(isLoading) {
-            empty_container.visibility = View.GONE
             error_container.visibility = View.GONE
-            progressbar_container.visibility = View.VISIBLE
+            if(viewModel.result.value is TopWikisResult.Success) {
+                swipe_refresh.isRefreshing = true
+            } else {
+                empty_container.visibility = View.GONE
+                progressbar_container.visibility = View.VISIBLE
+            }
         } else {
             progressbar_container.visibility = View.GONE
+            swipe_refresh.isRefreshing = false
         }
     }
 
-    private fun renderError(error: Boolean, type: ErrorType? = null) {
-        if(error) {
-            progressbar_container.visibility = View.GONE
-            when(type) {
-                ErrorType.REFRESH -> showMessage(R.string.refresh_data_failed)
-                else -> {
-                    empty_container.visibility = View.GONE
-                    error_container.visibility = View.VISIBLE
-                }
-            }
-        } else {
-            error_container.visibility = View.GONE
-        }
+    private fun renderError() {
+        swipe_refresh.visibility = View.GONE
+        empty_container.visibility = View.GONE
+        error_container.visibility = View.VISIBLE
+    }
+
+    private fun renderErrorRefresh() {
+        showMessage(R.string.refresh_data_failed)
     }
 
     private fun setRecyclerView() {
