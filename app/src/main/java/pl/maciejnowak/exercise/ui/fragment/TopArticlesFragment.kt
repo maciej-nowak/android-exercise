@@ -16,7 +16,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 import pl.maciejnowak.exercise.R
 import pl.maciejnowak.exercise.ui.adapter.TopArticlesAdapter
-import pl.maciejnowak.database.model.TopArticle
+import pl.maciejnowak.commonobjects.entities.TopArticle
 import pl.maciejnowak.exercise.ui.viewmodel.TopArticlesViewModel
 import pl.maciejnowak.repositories.model.TopArticlesResult
 

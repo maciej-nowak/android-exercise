@@ -1,6 +1,6 @@
 package pl.maciejnowak.repositories.model
 
-import pl.maciejnowak.database.model.TopWiki
+import pl.maciejnowak.commonobjects.entities.TopWiki
 
 sealed class TopWikisResult {
 

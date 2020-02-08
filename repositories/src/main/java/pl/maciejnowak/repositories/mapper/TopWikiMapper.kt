@@ -1,6 +1,6 @@
 package pl.maciejnowak.repositories.mapper
 
-import pl.maciejnowak.database.model.TopWiki
+import pl.maciejnowak.commonobjects.entities.TopWiki
 import pl.maciejnowak.network.model.ExpandedWikiaItem
 import pl.maciejnowak.utils.mapper.Mapper
 

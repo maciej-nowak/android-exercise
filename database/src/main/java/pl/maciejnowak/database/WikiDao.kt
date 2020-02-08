@@ -2,8 +2,8 @@ package pl.maciejnowak.database
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import pl.maciejnowak.database.model.TimeCreation
-import pl.maciejnowak.database.model.TopWiki
+import pl.maciejnowak.commonobjects.entities.TimeCreation
+import pl.maciejnowak.commonobjects.entities.TopWiki
 
 @Dao
 interface WikiDao {

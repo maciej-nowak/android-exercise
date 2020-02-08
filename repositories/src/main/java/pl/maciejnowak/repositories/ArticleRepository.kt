@@ -2,7 +2,7 @@ package pl.maciejnowak.repositories
 
 import kotlinx.coroutines.flow.*
 import pl.maciejnowak.database.ArticleDao
-import pl.maciejnowak.database.model.TopArticle
+import pl.maciejnowak.commonobjects.entities.TopArticle
 import pl.maciejnowak.network.FandomService
 import pl.maciejnowak.network.Network
 import pl.maciejnowak.network.Result

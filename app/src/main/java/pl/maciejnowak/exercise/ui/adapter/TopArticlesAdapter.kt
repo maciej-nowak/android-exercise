@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import pl.maciejnowak.exercise.R
-import pl.maciejnowak.database.model.TopArticle
+import pl.maciejnowak.commonobjects.entities.TopArticle
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit

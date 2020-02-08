@@ -29,6 +29,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation project(":utils")
+    implementation project(":commonobjects")
     //TODO replace api by implementation and DI
     api project(":network")
     api project(":database")

@@ -1,6 +1,6 @@
 package pl.maciejnowak.repositories.model
 
-import pl.maciejnowak.database.model.TopArticle
+import pl.maciejnowak.commonobjects.entities.TopArticle
 
 sealed class TopArticlesResult {
 
