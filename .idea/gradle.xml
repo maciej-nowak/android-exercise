@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/database" />
             <option value="$PROJECT_DIR$/network" />
             <option value="$PROJECT_DIR$/repositories" />
+            <option value="$PROJECT_DIR$/utils" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
