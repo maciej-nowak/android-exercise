@@ -7,7 +7,7 @@ import pl.maciejnowak.network.FandomService
 import pl.maciejnowak.network.Network
 import pl.maciejnowak.network.Result
 import pl.maciejnowak.network.model.ExpandedWikiaItem
-import pl.maciejnowak.repositories.mapper.Mapper
+import pl.maciejnowak.utils.mapper.Mapper
 import pl.maciejnowak.repositories.model.TopWikisResult
 import java.util.concurrent.TimeUnit
 

@@ -35,6 +35,7 @@ dependencies {
 
     //module
     implementation project(":repositories")
+    implementation project(":utils")
     //remove these when DI will be added
     implementation project(":network")
     implementation project(":database")
