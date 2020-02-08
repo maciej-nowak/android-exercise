@@ -18,7 +18,7 @@ import pl.maciejnowak.exercise.R
 import pl.maciejnowak.exercise.ui.adapter.TopWikisAdapter
 import pl.maciejnowak.exercise.database.Database
 import pl.maciejnowak.exercise.database.model.TopWiki
-import pl.maciejnowak.exercise.network.Network
+import pl.maciejnowak.network.Network
 import pl.maciejnowak.exercise.ui.mapper.TopWikiMapper
 import pl.maciejnowak.exercise.ui.repository.WikiRepository
 import pl.maciejnowak.exercise.ui.viewmodel.TopWikisViewModel

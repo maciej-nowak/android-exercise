@@ -3,10 +3,10 @@ package pl.maciejnowak.exercise.ui.repository
 import kotlinx.coroutines.flow.*
 import pl.maciejnowak.exercise.database.WikiDao
 import pl.maciejnowak.exercise.database.model.TopWiki
-import pl.maciejnowak.exercise.network.FandomService
-import pl.maciejnowak.exercise.network.Network
-import pl.maciejnowak.exercise.network.Result
-import pl.maciejnowak.exercise.network.model.ExpandedWikiaItem
+import pl.maciejnowak.network.FandomService
+import pl.maciejnowak.network.Network
+import pl.maciejnowak.network.Result
+import pl.maciejnowak.network.model.ExpandedWikiaItem
 import pl.maciejnowak.exercise.ui.mapper.Mapper
 import pl.maciejnowak.exercise.ui.viewmodel.model.TopWikisResult
 import java.util.concurrent.TimeUnit
