@@ -1,11 +1,9 @@
-package pl.maciejnowak.network
+package pl.maciejnowak.network.result
 
 import retrofit2.Response
 import java.io.IOException
 
 object Network {
-
-    val fandomService = FandomService.create()
 
     suspend fun <T> invoke(endpoint: suspend () -> Response<T>): Result<T> {
         return try {

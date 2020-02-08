@@ -1,4 +1,4 @@
-package pl.maciejnowak.database
+package pl.maciejnowak.database.dao
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow

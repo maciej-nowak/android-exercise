@@ -1,11 +1,11 @@
 package pl.maciejnowak.repositories
 
 import kotlinx.coroutines.flow.*
-import pl.maciejnowak.database.ArticleDao
+import pl.maciejnowak.database.dao.ArticleDao
 import pl.maciejnowak.commonobjects.entities.TopArticle
 import pl.maciejnowak.network.FandomService
-import pl.maciejnowak.network.Network
-import pl.maciejnowak.network.Result
+import pl.maciejnowak.network.result.Network
+import pl.maciejnowak.network.result.Result
 import pl.maciejnowak.network.model.ExpandedArticle
 import pl.maciejnowak.utils.mapper.Mapper
 import pl.maciejnowak.repositories.model.TopArticlesResult

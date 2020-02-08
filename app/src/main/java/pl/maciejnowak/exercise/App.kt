@@ -10,7 +10,7 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import pl.maciejnowak.exercise.ui.viewmodel.TopArticlesViewModel
 import pl.maciejnowak.exercise.ui.viewmodel.TopWikisViewModel
-import pl.maciejnowak.repositories.ModuleRepository
+import pl.maciejnowak.repositories.di.ModuleRepository
 
 class App : Application() {
 

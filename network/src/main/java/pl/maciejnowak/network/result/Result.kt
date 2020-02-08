@@ -1,4 +1,4 @@
-package pl.maciejnowak.network
+package pl.maciejnowak.network.result
 
 sealed class Result<out T> {
     data class Success<T>(val body: T): Result<T>()

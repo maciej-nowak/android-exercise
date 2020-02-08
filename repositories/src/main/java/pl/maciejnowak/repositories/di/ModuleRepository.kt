@@ -1,9 +1,11 @@
-package pl.maciejnowak.repositories
+package pl.maciejnowak.repositories.di
 
 import org.koin.core.context.loadKoinModules
 import org.koin.dsl.module
-import pl.maciejnowak.database.ModuleDatabase
-import pl.maciejnowak.network.ModuleNetwork
+import pl.maciejnowak.database.di.ModuleDatabase
+import pl.maciejnowak.network.di.ModuleNetwork
+import pl.maciejnowak.repositories.ArticleRepository
+import pl.maciejnowak.repositories.WikiRepository
 import pl.maciejnowak.repositories.mapper.TopArticleMapper
 import pl.maciejnowak.repositories.mapper.TopWikiMapper
 
