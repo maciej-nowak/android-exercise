@@ -1,6 +1,6 @@
 package pl.maciejnowak.exercise.ui.mapper
 
-import pl.maciejnowak.exercise.database.model.TopArticle
+import pl.maciejnowak.database.model.TopArticle
 import pl.maciejnowak.network.model.ExpandedArticle
 
 class TopArticleMapper : Mapper<ExpandedArticle, TopArticle> {

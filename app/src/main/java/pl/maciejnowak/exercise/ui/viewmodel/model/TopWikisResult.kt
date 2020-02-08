@@ -1,6 +1,6 @@
 package pl.maciejnowak.exercise.ui.viewmodel.model
 
-import pl.maciejnowak.exercise.database.model.TopWiki
+import pl.maciejnowak.database.model.TopWiki
 
 sealed class TopWikisResult {
 

@@ -1,8 +1,8 @@
 package pl.maciejnowak.exercise.ui.repository
 
 import kotlinx.coroutines.flow.*
-import pl.maciejnowak.exercise.database.ArticleDao
-import pl.maciejnowak.exercise.database.model.TopArticle
+import pl.maciejnowak.database.ArticleDao
+import pl.maciejnowak.database.model.TopArticle
 import pl.maciejnowak.network.FandomService
 import pl.maciejnowak.network.Network
 import pl.maciejnowak.network.Result

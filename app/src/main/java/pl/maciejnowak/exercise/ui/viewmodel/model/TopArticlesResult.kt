@@ -1,6 +1,6 @@
 package pl.maciejnowak.exercise.ui.viewmodel.model
 
-import pl.maciejnowak.exercise.database.model.TopArticle
+import pl.maciejnowak.database.model.TopArticle
 
 sealed class TopArticlesResult {
 
