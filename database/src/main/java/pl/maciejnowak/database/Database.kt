@@ -19,4 +19,10 @@ object Database {
                 .build()
         }
     }
+
+    fun create(context: Context): AppDatabase {
+        return Room
+            .databaseBuilder(context, AppDatabase::class.java, "AppDatabase")
+            .build()
+    }
 }

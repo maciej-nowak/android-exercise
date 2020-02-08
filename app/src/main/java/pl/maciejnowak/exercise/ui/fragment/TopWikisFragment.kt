@@ -13,13 +13,11 @@ import kotlinx.android.synthetic.main.fragment_top_wikis.*
 import kotlinx.android.synthetic.main.layout_empty.*
 import kotlinx.android.synthetic.main.layout_error.*
 import kotlinx.android.synthetic.main.layout_progress_bar.*
+import org.koin.android.ext.android.inject
 
 import pl.maciejnowak.exercise.R
 import pl.maciejnowak.exercise.ui.adapter.TopWikisAdapter
-import pl.maciejnowak.database.Database
 import pl.maciejnowak.database.model.TopWiki
-import pl.maciejnowak.network.Network
-import pl.maciejnowak.repositories.mapper.TopWikiMapper
 import pl.maciejnowak.repositories.WikiRepository
 import pl.maciejnowak.exercise.ui.viewmodel.TopWikisViewModel
 import pl.maciejnowak.exercise.ui.viewmodel.TopWikisViewModelFactory
@@ -28,6 +26,7 @@ import pl.maciejnowak.repositories.model.TopWikisResult
 class TopWikisFragment : Fragment() {
 
     private lateinit var viewModel: TopWikisViewModel
+    private val repository: WikiRepository by inject()
     private val adapter: TopWikisAdapter by lazy { TopWikisAdapter(requireContext()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,9 +47,8 @@ class TopWikisFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this,
-            TopWikisViewModelFactory(WikiRepository(Network.fandomService, Database.wikiDao, TopWikiMapper()))
-        ).get(TopWikisViewModel::class.java)
+        viewModel = ViewModelProvider(this, TopWikisViewModelFactory(repository))
+            .get(TopWikisViewModel::class.java)
     }
 
     private fun observeViewModel() {

@@ -13,13 +13,11 @@ import kotlinx.android.synthetic.main.fragment_top_wikis.*
 import kotlinx.android.synthetic.main.layout_empty.*
 import kotlinx.android.synthetic.main.layout_error.*
 import kotlinx.android.synthetic.main.layout_progress_bar.*
+import org.koin.android.ext.android.inject
 
 import pl.maciejnowak.exercise.R
 import pl.maciejnowak.exercise.ui.adapter.TopArticlesAdapter
-import pl.maciejnowak.database.Database
 import pl.maciejnowak.database.model.TopArticle
-import pl.maciejnowak.network.Network
-import pl.maciejnowak.repositories.mapper.TopArticleMapper
 import pl.maciejnowak.repositories.ArticleRepository
 import pl.maciejnowak.exercise.ui.viewmodel.TopArticlesViewModel
 import pl.maciejnowak.exercise.ui.viewmodel.TopArticlesViewModelFactory
@@ -28,6 +26,7 @@ import pl.maciejnowak.repositories.model.TopArticlesResult
 class TopArticlesFragment : Fragment() {
 
     private lateinit var viewModel: TopArticlesViewModel
+    private val repository: ArticleRepository by inject()
     private val adapter: TopArticlesAdapter by lazy { TopArticlesAdapter(requireContext()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,9 +54,8 @@ class TopArticlesFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this,
-            TopArticlesViewModelFactory(ArticleRepository(Network.fandomService, Database.articleDao, TopArticleMapper()))
-        ).get(TopArticlesViewModel::class.java)
+        viewModel = ViewModelProvider(this, TopArticlesViewModelFactory(repository))
+            .get(TopArticlesViewModel::class.java)
     }
 
     private fun observeViewModel() {
