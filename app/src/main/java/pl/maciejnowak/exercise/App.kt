@@ -4,10 +4,13 @@ import android.app.Application
 import android.content.Context
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import pl.maciejnowak.database.AppDatabase
 import pl.maciejnowak.database.Database
+import pl.maciejnowak.exercise.ui.viewmodel.TopArticlesViewModel
+import pl.maciejnowak.exercise.ui.viewmodel.TopWikisViewModel
 import pl.maciejnowak.network.FandomService
 import pl.maciejnowak.repositories.ArticleRepository
 import pl.maciejnowak.repositories.WikiRepository
@@ -27,11 +30,12 @@ class App : Application() {
         single { get<AppDatabase>().articleDao() }
         factory { WikiRepository(get(), get(), TopWikiMapper()) }
         factory { ArticleRepository(get(), get(), TopArticleMapper()) }
+        viewModel { TopWikisViewModel(get()) }
+        viewModel { TopArticlesViewModel(get()) }
     }
 
     override fun onCreate() {
         super.onCreate()
-        Database.init(getContext())
         startKoin {
             androidLogger()
             androidContext(this@App)

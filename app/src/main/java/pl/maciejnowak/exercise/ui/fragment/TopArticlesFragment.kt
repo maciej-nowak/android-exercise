@@ -7,32 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_top_wikis.*
 import kotlinx.android.synthetic.main.layout_empty.*
 import kotlinx.android.synthetic.main.layout_error.*
 import kotlinx.android.synthetic.main.layout_progress_bar.*
-import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 import pl.maciejnowak.exercise.R
 import pl.maciejnowak.exercise.ui.adapter.TopArticlesAdapter
 import pl.maciejnowak.database.model.TopArticle
-import pl.maciejnowak.repositories.ArticleRepository
 import pl.maciejnowak.exercise.ui.viewmodel.TopArticlesViewModel
-import pl.maciejnowak.exercise.ui.viewmodel.TopArticlesViewModelFactory
 import pl.maciejnowak.repositories.model.TopArticlesResult
 
 class TopArticlesFragment : Fragment() {
 
-    private lateinit var viewModel: TopArticlesViewModel
-    private val repository: ArticleRepository by inject()
+    private val viewModel: TopArticlesViewModel by viewModel()
     private val adapter: TopArticlesAdapter by lazy { TopArticlesAdapter(requireContext()) }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initViewModel()
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_top_articles, container, false)
@@ -51,11 +42,6 @@ class TopArticlesFragment : Fragment() {
             layoutManager = LinearLayoutManager(activity)
             adapter = this@TopArticlesFragment.adapter
         }
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this, TopArticlesViewModelFactory(repository))
-            .get(TopArticlesViewModel::class.java)
     }
 
     private fun observeViewModel() {
