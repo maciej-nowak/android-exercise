@@ -16,14 +16,14 @@ import kotlinx.android.synthetic.main.layout_progress_bar.*
 
 import pl.maciejnowak.exercise.R
 import pl.maciejnowak.exercise.ui.adapter.TopWikisAdapter
-import pl.maciejnowak.exercise.database.Database
-import pl.maciejnowak.exercise.database.model.TopWiki
-import pl.maciejnowak.exercise.network.Network
-import pl.maciejnowak.exercise.ui.mapper.TopWikiMapper
-import pl.maciejnowak.exercise.ui.repository.WikiRepository
+import pl.maciejnowak.database.Database
+import pl.maciejnowak.database.model.TopWiki
+import pl.maciejnowak.network.Network
+import pl.maciejnowak.repositories.mapper.TopWikiMapper
+import pl.maciejnowak.repositories.WikiRepository
 import pl.maciejnowak.exercise.ui.viewmodel.TopWikisViewModel
 import pl.maciejnowak.exercise.ui.viewmodel.TopWikisViewModelFactory
-import pl.maciejnowak.exercise.ui.viewmodel.model.TopWikisResult
+import pl.maciejnowak.repositories.model.TopWikisResult
 
 class TopWikisFragment : Fragment() {
 

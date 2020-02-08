@@ -2,7 +2,7 @@ package pl.maciejnowak.exercise.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import pl.maciejnowak.exercise.ui.repository.WikiRepository
+import pl.maciejnowak.repositories.WikiRepository
 
 class TopWikisViewModelFactory(private val repository: WikiRepository) : ViewModelProvider.Factory {
 
