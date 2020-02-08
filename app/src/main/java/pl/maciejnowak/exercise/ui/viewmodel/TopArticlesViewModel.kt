@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.withIndex
-import pl.maciejnowak.exercise.ui.repository.ArticleRepository
-import pl.maciejnowak.exercise.ui.viewmodel.model.TopArticlesResult
+import pl.maciejnowak.repositories.ArticleRepository
+import pl.maciejnowak.repositories.model.TopArticlesResult
 
 class TopArticlesViewModel(private val repository: ArticleRepository) : ViewModel() {
 

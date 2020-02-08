@@ -34,6 +34,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     //module
+    implementation project(":repositories")
+    //remove these when DI will be added
     implementation project(":network")
     implementation project(":database")
 
@@ -59,9 +61,8 @@ dependencies {
     //external
     implementation 'com.google.android.material:material:1.1.0'
 
-    //TODO remove these when missing Response conflict resolved
+    //TODO remove this when missing Response conflict resolved
     implementation 'com.squareup.retrofit2:retrofit:2.7.1'
-    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     kapt 'com.github.bumptech.glide:compiler:4.11.0'

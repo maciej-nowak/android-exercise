@@ -19,11 +19,11 @@ import pl.maciejnowak.exercise.ui.adapter.TopArticlesAdapter
 import pl.maciejnowak.database.Database
 import pl.maciejnowak.database.model.TopArticle
 import pl.maciejnowak.network.Network
-import pl.maciejnowak.exercise.ui.mapper.TopArticleMapper
-import pl.maciejnowak.exercise.ui.repository.ArticleRepository
+import pl.maciejnowak.repositories.mapper.TopArticleMapper
+import pl.maciejnowak.repositories.ArticleRepository
 import pl.maciejnowak.exercise.ui.viewmodel.TopArticlesViewModel
 import pl.maciejnowak.exercise.ui.viewmodel.TopArticlesViewModelFactory
-import pl.maciejnowak.exercise.ui.viewmodel.model.TopArticlesResult
+import pl.maciejnowak.repositories.model.TopArticlesResult
 
 class TopArticlesFragment : Fragment() {
 
