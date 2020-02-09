@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import pl.maciejnowak.exercise.R
-import pl.maciejnowak.database.model.TopWiki
+import pl.maciejnowak.commonobjects.entities.TopWiki
 
 class TopWikisAdapter(private val context: Context, private val items: MutableList<TopWiki> = mutableListOf())
     : RecyclerView.Adapter<TopWikisAdapter.ViewHolder>() {

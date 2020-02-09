@@ -1,4 +1,4 @@
-package pl.maciejnowak.database.model
+package pl.maciejnowak.commonobjects.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

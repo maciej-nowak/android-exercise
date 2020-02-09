@@ -7,33 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_top_wikis.*
 import kotlinx.android.synthetic.main.layout_empty.*
 import kotlinx.android.synthetic.main.layout_error.*
 import kotlinx.android.synthetic.main.layout_progress_bar.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 import pl.maciejnowak.exercise.R
 import pl.maciejnowak.exercise.ui.adapter.TopWikisAdapter
-import pl.maciejnowak.database.Database
-import pl.maciejnowak.database.model.TopWiki
-import pl.maciejnowak.network.Network
-import pl.maciejnowak.repositories.mapper.TopWikiMapper
-import pl.maciejnowak.repositories.WikiRepository
+import pl.maciejnowak.commonobjects.entities.TopWiki
 import pl.maciejnowak.exercise.ui.viewmodel.TopWikisViewModel
-import pl.maciejnowak.exercise.ui.viewmodel.TopWikisViewModelFactory
 import pl.maciejnowak.repositories.model.TopWikisResult
 
 class TopWikisFragment : Fragment() {
 
-    private lateinit var viewModel: TopWikisViewModel
+    private val viewModel: TopWikisViewModel by viewModel()
     private val adapter: TopWikisAdapter by lazy { TopWikisAdapter(requireContext()) }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initViewModel()
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_top_wikis, container, false)
@@ -45,12 +35,6 @@ class TopWikisFragment : Fragment() {
         setRecyclerView()
         error_button.setOnClickListener { viewModel.loadTopWikis() }
         swipe_refresh.setOnRefreshListener { viewModel.loadTopWikis(true) }
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this,
-            TopWikisViewModelFactory(WikiRepository(Network.fandomService, Database.wikiDao, TopWikiMapper()))
-        ).get(TopWikisViewModel::class.java)
     }
 
     private fun observeViewModel() {
