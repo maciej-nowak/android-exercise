@@ -12,6 +12,7 @@ object Versions {
 
     //gradle
     val gradle = "3.5.3"
+    val versions_gradle_plugin = "0.27.0"
 
     //kotlin
     val kotlin = "1.3.61"
@@ -44,6 +45,7 @@ object Deps {
 
     //gradle
     val gradle = "com.android.tools.build:gradle:${Versions.gradle}"
+    val versions_gradle_plugin = "com.github.ben-manes:gradle-versions-plugin:${Versions.versions_gradle_plugin}"
 
     //kotlin
     val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"

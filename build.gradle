@@ -1,5 +1,3 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     repositories {
         google()
@@ -8,8 +6,7 @@ buildscript {
     dependencies {
         classpath Deps.gradle
         classpath Deps.kotlin_gradle_plugin
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath Deps.versions_gradle_plugin //run dependencyUpdates task to check dependencies are up to date
     }
 }
 
@@ -23,6 +20,7 @@ allprojects {
 subprojects {
     afterEvaluate { project ->
         if (project.hasProperty('android')) {
+            apply plugin: "com.github.ben-manes.versions" //for Deps.versions_gradle_plugin
             android {
                 buildToolsVersion Config.buildTools
                 compileSdkVersion Config.compileSdk
@@ -47,3 +45,6 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+//run projectDependecyGraph task to generate modules dependencies graph
+apply from: file('gradle/projectDependencyGraph.gradle')
