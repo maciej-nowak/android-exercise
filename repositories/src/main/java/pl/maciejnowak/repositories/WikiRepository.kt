@@ -41,7 +41,7 @@ class WikiRepository(
     }
 
     private fun hasDataExpired(creation: Long?): Boolean {
-        return (creation == null || creation < System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(1))
+        return (creation == null || creation < System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1))
     }
 }
 

@@ -6,15 +6,16 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.withIndex
+import pl.maciejnowak.exercise.ui.viewmodel.model.RefreshType
 import pl.maciejnowak.repositories.WikiRepository
 import pl.maciejnowak.repositories.model.TopWikisResult
 
 class TopWikisViewModel(private val repository: WikiRepository) : ViewModel() {
 
-    private val refresh: MutableLiveData<Boolean> = MutableLiveData(false)
+    private val refresh: MutableLiveData<RefreshType> = MutableLiveData(RefreshType.NORMAL)
 
     val result: LiveData<TopWikisResult> = refresh.switchMap { force ->
-        repository.fetchTopWikisFlow(force).withIndex()
+        repository.fetchTopWikisFlow(force.value).withIndex()
             .onStart { _isLoading.postValue(true) }
             .onEach { if(it.index == 0) { _isLoading.postValue(false) }}
             .map { it.value }
@@ -26,6 +27,10 @@ class TopWikisViewModel(private val repository: WikiRepository) : ViewModel() {
         get() = _isLoading
 
     fun loadTopWikis(forceRefresh: Boolean = false) {
-        refresh.value = forceRefresh
+        refresh.value = RefreshType.valueOf(forceRefresh)
+    }
+
+    fun isSuccess(): Boolean {
+        return result.value is TopWikisResult.Success
     }
 }

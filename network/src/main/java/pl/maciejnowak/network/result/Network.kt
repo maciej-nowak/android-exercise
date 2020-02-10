@@ -5,9 +5,9 @@ import java.io.IOException
 
 object Network {
 
-    suspend fun <T> invoke(endpoint: suspend () -> Response<T>): Result<T> {
+    suspend fun <T> invoke(call: suspend () -> Response<T>): Result<T> {
         return try {
-            val response = endpoint.invoke()
+            val response = call.invoke()
             if(response.isSuccessful && response.body() != null) {
                 Result.Success(response.body()!!)
             } else {

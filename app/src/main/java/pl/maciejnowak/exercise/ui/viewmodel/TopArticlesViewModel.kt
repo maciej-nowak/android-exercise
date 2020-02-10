@@ -6,15 +6,16 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.withIndex
+import pl.maciejnowak.exercise.ui.viewmodel.model.RefreshType
 import pl.maciejnowak.repositories.ArticleRepository
 import pl.maciejnowak.repositories.model.TopArticlesResult
 
 class TopArticlesViewModel(private val repository: ArticleRepository) : ViewModel() {
 
-    private val refresh: MutableLiveData<Boolean> = MutableLiveData(false)
+    private val refresh: MutableLiveData<RefreshType> = MutableLiveData(RefreshType.NORMAL)
 
     val result: LiveData<TopArticlesResult> = refresh.switchMap { force ->
-        repository.fetchTopArticlesFlow(force).withIndex()
+        repository.fetchTopArticlesFlow(force.value).withIndex()
             .onStart { _isLoading.postValue(true) }
             .onEach { if(it.index == 0) { _isLoading.postValue(false) }}
             .map { it.value }
@@ -26,6 +27,10 @@ class TopArticlesViewModel(private val repository: ArticleRepository) : ViewMode
         get() = _isLoading
 
     fun loadTopArticles(forceRefresh: Boolean = false) {
-        refresh.value = forceRefresh
+        refresh.value = RefreshType.valueOf(forceRefresh)
+    }
+
+    fun isSuccess(): Boolean {
+        return result.value is TopArticlesResult.Success
     }
 }

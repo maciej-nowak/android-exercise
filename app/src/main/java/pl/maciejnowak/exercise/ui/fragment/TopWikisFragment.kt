@@ -50,26 +50,25 @@ class TopWikisFragment : Fragment() {
         }
     }
 
-    private fun renderSuccess(items: List<TopWiki>) {
-        error_container.visibility = View.GONE
-        swipe_refresh.visibility = View.VISIBLE
-        adapter.update(items)
-        setItemsVisibility()
-    }
-
     private fun renderLoading(isLoading: Boolean) {
         if(isLoading) {
-            error_container.visibility = View.GONE
-            if(viewModel.result.value is TopWikisResult.Success) {
+            if(viewModel.isSuccess()) {
                 swipe_refresh.isRefreshing = true
             } else {
-                empty_container.visibility = View.GONE
+                error_container.visibility = View.GONE
                 progressbar_container.visibility = View.VISIBLE
             }
         } else {
             progressbar_container.visibility = View.GONE
             swipe_refresh.isRefreshing = false
         }
+    }
+
+    private fun renderSuccess(items: List<TopWiki>) {
+        error_container.visibility = View.GONE
+        swipe_refresh.visibility = View.VISIBLE
+        adapter.update(items)
+        setItemsVisibility()
     }
 
     private fun renderError() {
