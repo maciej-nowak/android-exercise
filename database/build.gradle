@@ -1,0 +1,29 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+dependencies {
+    //local
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    //module
+    implementation project(":commonobjects")
+
+    //kotlin
+    implementation Deps.kotlin
+    implementation Deps.kotlinx_coroutines_core
+
+    //androidx
+    implementation Deps.androidx_room_runtime
+    implementation Deps.androidx_room_ktx
+    kapt Deps.androidx_room_compiler
+
+    //external
+    implementation Deps.koin_android
+
+    //test
+    testImplementation Deps.junit
+    androidTestImplementation Deps.androidx_test_ext
+    androidTestImplementation Deps.androidx_test_espresso
+}

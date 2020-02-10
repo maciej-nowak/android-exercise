@@ -1,2 +1,7 @@
 include ':app'
+include ':network'
+include ':database'
+include ':repositories'
+include ':utils'
+include ':commonobjects'
 rootProject.name='Exercise'
