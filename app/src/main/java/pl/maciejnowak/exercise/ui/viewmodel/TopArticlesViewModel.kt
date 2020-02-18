@@ -1,12 +1,14 @@
 package pl.maciejnowak.exercise.ui.viewmodel
 
 import androidx.lifecycle.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import pl.maciejnowak.repositories.ArticleRepository
 import pl.maciejnowak.repositories.model.TopArticlesResult
 
-class TopArticlesViewModel(private val repository: ArticleRepository) : ViewModel() {
+class TopArticlesViewModel(
+    private val repository: ArticleRepository,
+    private val dispatcher: DispatcherProvider = DispatcherProvider
+) : ViewModel() {
 
     init {
         loadTopArticles()
@@ -21,7 +23,7 @@ class TopArticlesViewModel(private val repository: ArticleRepository) : ViewMode
         get() = _isLoading
 
     fun loadTopArticles(forceRefresh: Boolean = false) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher.IO) {
             _isLoading.postValue(true)
             val articles = repository.fetchTopArticles(forceRefresh)
             _result.postValue(articles)
