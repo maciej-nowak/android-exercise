@@ -1,19 +1,17 @@
 package pl.maciejnowak.repositories
 
 import pl.maciejnowak.database.dao.ArticleDao
-import pl.maciejnowak.commonobjects.entities.TopArticle
 import pl.maciejnowak.network.FandomService
 import pl.maciejnowak.network.result.Network
 import pl.maciejnowak.network.result.Result
-import pl.maciejnowak.network.model.ExpandedArticle
-import pl.maciejnowak.utils.mapper.Mapper
+import pl.maciejnowak.repositories.mapper.TopArticleMapper
 import pl.maciejnowak.repositories.model.TopArticlesResult
 import java.util.concurrent.TimeUnit
 
 class ArticleRepository(
     private val fandomService: FandomService,
     private val articleDao: ArticleDao,
-    private val mapper: Mapper<ExpandedArticle, TopArticle>
+    private val mapper: TopArticleMapper
 ) {
 
     suspend fun fetchTopArticles(forceRefresh: Boolean): TopArticlesResult {

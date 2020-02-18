@@ -1,19 +1,17 @@
 package pl.maciejnowak.repositories
 
 import pl.maciejnowak.database.dao.WikiDao
-import pl.maciejnowak.commonobjects.entities.TopWiki
 import pl.maciejnowak.network.FandomService
 import pl.maciejnowak.network.result.Network
 import pl.maciejnowak.network.result.Result
-import pl.maciejnowak.network.model.ExpandedWikiaItem
-import pl.maciejnowak.utils.mapper.Mapper
+import pl.maciejnowak.repositories.mapper.TopWikiMapper
 import pl.maciejnowak.repositories.model.TopWikisResult
 import java.util.concurrent.TimeUnit
 
 class WikiRepository(
     private val fandomService: FandomService,
     private val wikiDao: WikiDao,
-    private val mapper: Mapper<ExpandedWikiaItem, TopWiki>
+    private val mapper: TopWikiMapper
 ) {
 
     suspend fun fetchTopWikis(forceRefresh: Boolean): TopWikisResult {
