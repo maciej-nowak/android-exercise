@@ -7,7 +7,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     //module
-    implementation project(":utils")
     implementation project(":commonobjects")
     implementation project(":network")
     implementation project(":database")
