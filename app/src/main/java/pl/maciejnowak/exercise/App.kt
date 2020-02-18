@@ -1,7 +1,6 @@
 package pl.maciejnowak.exercise
 
 import android.app.Application
-import android.content.Context
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.android.viewmodel.dsl.viewModel
@@ -18,7 +17,7 @@ class App : Application() {
         instance = this
     }
 
-    val appModule = module {
+    private val appModule = module {
         viewModel { TopWikisViewModel(get()) }
         viewModel { TopArticlesViewModel(get()) }
     }
@@ -36,9 +35,5 @@ class App : Application() {
     companion object {
         lateinit var instance: App
             private set
-
-        fun getContext(): Context {
-            return instance.applicationContext
-        }
     }
 }
