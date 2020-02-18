@@ -13,7 +13,9 @@ object ModuleRepository {
 
     fun get() = module {
         loadKoinModules(listOf(ModuleNetwork.get(), ModuleDatabase.get()))
-        factory { WikiRepository(get(), get(), TopWikiMapper()) }
-        factory { ArticleRepository(get(), get(), TopArticleMapper()) }
+        single { TopWikiMapper() }
+        single { TopArticleMapper() }
+        factory { WikiRepository(get(), get(), get()) }
+        factory { ArticleRepository(get(), get(), get()) }
     }
 }

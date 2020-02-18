@@ -1,36 +1,37 @@
 package pl.maciejnowak.exercise.ui.viewmodel
 
 import androidx.lifecycle.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.withIndex
-import pl.maciejnowak.exercise.ui.viewmodel.model.RefreshType
+import kotlinx.coroutines.launch
 import pl.maciejnowak.repositories.WikiRepository
 import pl.maciejnowak.repositories.model.TopWikisResult
 
-class TopWikisViewModel(private val repository: WikiRepository) : ViewModel() {
+class TopWikisViewModel(
+    private val repository: WikiRepository,
+    private val dispatcher: DispatcherProvider = DispatcherProvider
+) : ViewModel() {
 
-    private val refresh: MutableLiveData<RefreshType> = MutableLiveData(RefreshType.NORMAL)
-
-    val result: LiveData<TopWikisResult> = refresh.switchMap { force ->
-        repository.fetchTopWikisFlow(force.value).withIndex()
-            .onStart { _isLoading.postValue(true) }
-            .onEach { if(it.index == 0) { _isLoading.postValue(false) }}
-            .map { it.value }
-            .asLiveData(Dispatchers.IO)
+    init {
+        loadTopWikis()
     }
 
-    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(true)
+    private val _result: MutableLiveData<TopWikisResult> = MutableLiveData()
+    val result: LiveData<TopWikisResult>
+        get() = _result
+
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData()
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
     fun loadTopWikis(forceRefresh: Boolean = false) {
-        refresh.value = RefreshType.valueOf(forceRefresh)
+        viewModelScope.launch(dispatcher.IO) {
+            _isLoading.postValue(true)
+            val wikis = repository.fetchTopWikis(forceRefresh)
+            _result.postValue(wikis)
+            _isLoading.postValue(false)
+        }
     }
 
     fun isSuccess(): Boolean {
-        return result.value is TopWikisResult.Success
+        return result.value !is TopWikisResult.Error
     }
 }

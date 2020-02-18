@@ -1,15 +1,11 @@
 package pl.maciejnowak.database.dao
 
 import androidx.room.*
-import kotlinx.coroutines.flow.Flow
 import pl.maciejnowak.commonobjects.entities.TimeCreation
 import pl.maciejnowak.commonobjects.entities.TopWiki
 
 @Dao
 interface WikiDao {
-
-    @Query("SELECT * FROM TopWiki")
-    fun loadTopWikisFlow(): Flow<List<TopWiki>>
 
     @Query("SELECT * FROM TopWiki")
     suspend fun loadTopWikis(): List<TopWiki>

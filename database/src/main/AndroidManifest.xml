@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="pl.maciejnowak.database" />
+<manifest package="pl.maciejnowak.database" />

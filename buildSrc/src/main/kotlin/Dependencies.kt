@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection", "MayBeConstant")
+
 import org.gradle.api.JavaVersion
 
 object Config {
@@ -20,7 +22,7 @@ object Versions {
 
     //androidx
     val androidx_appcompat = "1.1.0"
-    val androidx_core = "1.0.1"
+    val androidx_core = "1.2.0"
     val androidx_fragment = "1.2.1"
     val androidx_legacy = "1.0.0"
     val androidx_recyclerview = "1.1.0"
@@ -30,7 +32,7 @@ object Versions {
     val androidx_room = "2.2.3"
 
     //test
-    val junit = "4.12"
+    val junit = "4.13"
     val androidx_test_ext = "1.1.1"
     val androidx_test_espresso = "3.2.0"
 

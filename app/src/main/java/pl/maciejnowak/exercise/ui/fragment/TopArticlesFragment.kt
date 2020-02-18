@@ -23,7 +23,7 @@ import pl.maciejnowak.repositories.model.TopArticlesResult
 class TopArticlesFragment : Fragment() {
 
     private val viewModel: TopArticlesViewModel by viewModel()
-    private val adapter: TopArticlesAdapter by lazy { TopArticlesAdapter(requireContext()) }
+    private val adapter: TopArticlesAdapter by lazy { TopArticlesAdapter() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_top_articles, container, false)
@@ -53,7 +53,7 @@ class TopArticlesFragment : Fragment() {
         when(result) {
             is TopArticlesResult.Success -> { renderSuccess(result.list) }
             is TopArticlesResult.Error -> { renderError() }
-            is TopArticlesResult.ErrorRefresh -> { renderErrorRefresh() }
+            is TopArticlesResult.ErrorRefresh -> { renderErrorRefresh(result.list) }
         }
     }
 
@@ -84,8 +84,11 @@ class TopArticlesFragment : Fragment() {
         error_container.visibility = View.VISIBLE
     }
 
-    private fun renderErrorRefresh() {
+    private fun renderErrorRefresh(items: List<TopArticle>) {
         showMessage(R.string.refresh_data_failed)
+        if(adapter.itemCount <= 0) {
+            renderSuccess(items)
+        }
     }
 
     private fun setItemsVisibility() {
