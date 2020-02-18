@@ -21,7 +21,7 @@
         app:layout_constraintBottom_toTopOf="@id/user"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Title" />
+        tools:text="@tools:sample/cities" />
 
     <TextView
         android:id="@+id/user"
@@ -31,7 +31,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
-        tools:text="Username" />
+        tools:text="@tools:sample/full_names" />
 
     <TextView
         android:id="@+id/date"
@@ -41,6 +41,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
-        tools:text="10.10.2010" />
+        tools:text="@tools:sample/date/ddmmyy" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
