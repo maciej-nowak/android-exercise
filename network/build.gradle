@@ -10,7 +10,6 @@ dependencies {
     implementation Deps.kotlin
 
     //external
-    //TODO should replace api by implementation and Adapter class? - for Response class visibility
     api Deps.retrofit
     implementation Deps.retrofit_converter_gson
     implementation Deps.koin_android

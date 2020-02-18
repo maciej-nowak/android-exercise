@@ -23,7 +23,7 @@ import pl.maciejnowak.repositories.model.TopArticlesResult
 class TopArticlesFragment : Fragment() {
 
     private val viewModel: TopArticlesViewModel by viewModel()
-    private val adapter: TopArticlesAdapter by lazy { TopArticlesAdapter(requireContext()) }
+    private val adapter: TopArticlesAdapter by lazy { TopArticlesAdapter() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_top_articles, container, false)
