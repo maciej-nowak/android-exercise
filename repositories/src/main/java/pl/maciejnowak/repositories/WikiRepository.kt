@@ -1,6 +1,5 @@
 package pl.maciejnowak.repositories
 
-import kotlinx.coroutines.flow.*
 import pl.maciejnowak.database.dao.WikiDao
 import pl.maciejnowak.commonobjects.entities.TopWiki
 import pl.maciejnowak.network.FandomService
@@ -17,20 +16,23 @@ class WikiRepository(
     private val mapper: Mapper<ExpandedWikiaItem, TopWiki>
 ) {
 
-    val cache: Flow<TopWikisResult> = wikiDao.loadTopWikisFlow().map { TopWikisResult.Success(it) }
-
-    fun fetchTopWikisFlow(forceRefresh: Boolean): Flow<TopWikisResult> = flow {
-        if(wikiDao.hasTopWikis() != null) {
+    suspend fun fetchTopWikis(forceRefresh: Boolean): TopWikisResult {
+        return if(wikiDao.hasTopWikis() != null) {
             if((forceRefresh || hasDataExpired(wikiDao.getTimeCreation())) && !fetchTopWikisRemote()) {
-                emit(TopWikisResult.ErrorRefresh)
+                TopWikisResult.ErrorRefresh(wikiDao.loadTopWikis())
+            } else {
+                TopWikisResult.Success(wikiDao.loadTopWikis())
             }
-            emitAll(cache)
         } else {
-            if(fetchTopWikisRemote()) emitAll(cache) else emit(TopWikisResult.Error)
+            if(fetchTopWikisRemote()) {
+                TopWikisResult.Success(wikiDao.loadTopWikis())
+            } else {
+                TopWikisResult.Error
+            }
         }
     }
 
-    suspend fun fetchTopWikisRemote(): Boolean {
+    private suspend fun fetchTopWikisRemote(): Boolean {
         return when(val result = Network.invoke { fandomService.getTopWikis(30) }) {
             is Result.Success -> {
                 wikiDao.update(result.body.items.map { mapper.map(it) })

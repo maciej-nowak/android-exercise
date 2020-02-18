@@ -1,15 +1,11 @@
 package pl.maciejnowak.database.dao
 
 import androidx.room.*
-import kotlinx.coroutines.flow.Flow
 import pl.maciejnowak.commonobjects.entities.TimeCreation
 import pl.maciejnowak.commonobjects.entities.TopArticle
 
 @Dao
 interface ArticleDao {
-
-    @Query("SELECT * FROM TopArticle")
-    fun loadTopArticlesFlow(): Flow<List<TopArticle>>
 
     @Query("SELECT * FROM TopArticle")
     suspend fun loadTopArticles(): List<TopArticle>

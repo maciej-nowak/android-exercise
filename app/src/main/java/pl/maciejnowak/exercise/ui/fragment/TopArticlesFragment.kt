@@ -53,7 +53,7 @@ class TopArticlesFragment : Fragment() {
         when(result) {
             is TopArticlesResult.Success -> { renderSuccess(result.list) }
             is TopArticlesResult.Error -> { renderError() }
-            is TopArticlesResult.ErrorRefresh -> { renderErrorRefresh() }
+            is TopArticlesResult.ErrorRefresh -> { renderErrorRefresh(result.list) }
         }
     }
 
@@ -84,8 +84,11 @@ class TopArticlesFragment : Fragment() {
         error_container.visibility = View.VISIBLE
     }
 
-    private fun renderErrorRefresh() {
+    private fun renderErrorRefresh(items: List<TopArticle>) {
         showMessage(R.string.refresh_data_failed)
+        if(adapter.itemCount <= 0) {
+            renderSuccess(items)
+        }
     }
 
     private fun setItemsVisibility() {
