@@ -20,6 +20,7 @@ dependencies {
 
     //test
     testImplementation Deps.junit
+    testImplementation Deps.mockito_inline
     androidTestImplementation Deps.androidx_test_ext
     androidTestImplementation Deps.androidx_test_espresso
 }

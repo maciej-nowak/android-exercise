@@ -32,9 +32,10 @@ object Versions {
     val androidx_room = "2.2.3"
 
     //test
-    val junit = "4.13"
+    val junit = "4.12"
     val androidx_test_ext = "1.1.1"
     val androidx_test_espresso = "3.2.0"
+    val mockito = "3.2.4"
 
     //external
     val android_material = "1.1.0"
@@ -75,6 +76,7 @@ object Deps {
     val junit = "junit:junit:${Versions.junit}"
     val androidx_test_ext = "androidx.test.ext:junit:${Versions.androidx_test_ext}"
     val androidx_test_espresso = "androidx.test.espresso:espresso-core:${Versions.androidx_test_espresso}"
+    val mockito_inline = "org.mockito:mockito-inline:${Versions.mockito}"
 
     //external
     val android_material = "com.google.android.material:material:${Versions.android_material}"

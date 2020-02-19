@@ -1,4 +1,4 @@
-package pl.maciejnowak.repositories
+package pl.maciejnowak.repositories.mapper
 
 import org.junit.Assert.*
 import org.junit.Test
