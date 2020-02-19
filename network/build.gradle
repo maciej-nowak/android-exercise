@@ -8,6 +8,7 @@ dependencies {
 
     //kotlin
     implementation Deps.kotlin
+    implementation Deps.kotlinx_coroutines_core
 
     //external
     api Deps.retrofit
@@ -16,6 +17,7 @@ dependencies {
 
     //test
     testImplementation Deps.junit
+    testImplementation Deps.mockito_inline
     androidTestImplementation Deps.androidx_test_ext
     androidTestImplementation Deps.androidx_test_espresso
 }
