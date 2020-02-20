@@ -7,7 +7,8 @@ import pl.maciejnowak.repositories.model.TopArticlesResult
 
 class TopArticlesViewModel(
     private val repository: ArticleRepository,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider(),
+    init: Boolean = true
 ) : ViewModel() {
 
     private val _result: MutableLiveData<TopArticlesResult> = MutableLiveData()
@@ -19,7 +20,7 @@ class TopArticlesViewModel(
         get() = _isLoading
 
     init {
-        loadTopArticles()
+        if(init) loadTopArticles()
     }
 
     fun loadTopArticles(forceRefresh: Boolean = false) {

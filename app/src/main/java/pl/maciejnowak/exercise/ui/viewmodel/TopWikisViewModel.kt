@@ -7,7 +7,8 @@ import pl.maciejnowak.repositories.model.TopWikisResult
 
 class TopWikisViewModel(
     private val repository: WikiRepository,
-    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider()
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider(),
+    init: Boolean = true
 ) : ViewModel() {
 
     private val _result: MutableLiveData<TopWikisResult> = MutableLiveData()
@@ -19,7 +20,7 @@ class TopWikisViewModel(
         get() = _isLoading
 
     init {
-        loadTopWikis()
+        if(init) loadTopWikis()
     }
 
     fun loadTopWikis(forceRefresh: Boolean = false) {

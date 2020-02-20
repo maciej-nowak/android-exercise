@@ -35,6 +35,7 @@ object Versions {
     val junit = "4.12"
     val androidx_test_ext = "1.1.1"
     val androidx_test_espresso = "3.2.0"
+    val androidx_arch_core = "2.1.0"
     val mockito = "3.2.4"
 
     //external
@@ -74,8 +75,10 @@ object Deps {
 
     //test
     val junit = "junit:junit:${Versions.junit}"
+    val kotlinx_coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinx}"
     val androidx_test_ext = "androidx.test.ext:junit:${Versions.androidx_test_ext}"
     val androidx_test_espresso = "androidx.test.espresso:espresso-core:${Versions.androidx_test_espresso}"
+    val androidx_arch_core_testing = "androidx.arch.core:core-testing:${Versions.androidx_arch_core}"
     val mockito_inline = "org.mockito:mockito-inline:${Versions.mockito}"
 
     //external
