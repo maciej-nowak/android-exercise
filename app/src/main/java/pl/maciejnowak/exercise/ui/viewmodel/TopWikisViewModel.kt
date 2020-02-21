@@ -2,9 +2,11 @@ package pl.maciejnowak.exercise.ui.viewmodel
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
+import pl.maciejnowak.commonobjects.OpenForTesting
 import pl.maciejnowak.repositories.WikiRepository
 import pl.maciejnowak.repositories.model.TopWikisResult
 
+@OpenForTesting
 class TopWikisViewModel(
     private val repository: WikiRepository,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider(),

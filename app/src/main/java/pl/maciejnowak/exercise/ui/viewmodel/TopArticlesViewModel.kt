@@ -2,9 +2,11 @@ package pl.maciejnowak.exercise.ui.viewmodel
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
+import pl.maciejnowak.commonobjects.OpenForTesting
 import pl.maciejnowak.repositories.ArticleRepository
 import pl.maciejnowak.repositories.model.TopArticlesResult
 
+@OpenForTesting
 class TopArticlesViewModel(
     private val repository: ArticleRepository,
     private val dispatcher: DispatcherProvider = DefaultDispatcherProvider(),
