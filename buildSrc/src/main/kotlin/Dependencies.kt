@@ -36,6 +36,7 @@ object Versions {
     val androidx_test_ext = "1.1.1"
     val androidx_test_espresso = "3.2.0"
     val androidx_arch_core = "2.1.0"
+    val androidx_fragment_testing = "1.2.1"
     val mockito = "3.2.4"
 
     //external
@@ -80,7 +81,11 @@ object Deps {
     val androidx_test_ext = "androidx.test.ext:junit:${Versions.androidx_test_ext}"
     val androidx_test_espresso = "androidx.test.espresso:espresso-core:${Versions.androidx_test_espresso}"
     val androidx_arch_core_testing = "androidx.arch.core:core-testing:${Versions.androidx_arch_core}"
+    val androidx_fragment_testing = "androidx.fragment:fragment-testing:${Versions.androidx_fragment_testing}"
+    val mockito_core = "org.mockito:mockito-core:${Versions.mockito}"
     val mockito_inline = "org.mockito:mockito-inline:${Versions.mockito}"
+    val mockito_android = "org.mockito:mockito-android:${Versions.mockito}"
+    val koin_test = "org.koin:koin-test:${Versions.koin}"
 
     //external
     val android_material = "com.google.android.material:material:${Versions.android_material}"
