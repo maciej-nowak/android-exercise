@@ -20,6 +20,7 @@ import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Captor
 
 import org.mockito.Mock
@@ -39,13 +40,14 @@ class TopWikisFragmentTest : KoinTest {
     @Mock private lateinit var viewModel: TopWikisViewModel
     @Mock private lateinit var resultLiveData: LiveData<TopWikisResult>
     @Mock private lateinit var isLoadingLiveData: LiveData<Boolean>
+
     @Captor private lateinit var resultCaptor: ArgumentCaptor<Observer<TopWikisResult>>
     @Captor private lateinit var isLoadingCaptor: ArgumentCaptor<Observer<Boolean>>
 
     private val mockModule = module {
         viewModel(override = true) { viewModel }
     }
-    private val topWiki = TopWiki(0, "", "", 0)
+    private val topWiki = TopWiki(0, "title", "imageUrl", 0)
 
     @Before
     fun init() {
@@ -117,15 +119,16 @@ class TopWikisFragmentTest : KoinTest {
         mockLoadTopWikis(TopWikisResult.ErrorRefresh(emptyList()))
         changeResult(TopWikisResult.Success(emptyList()))
         onView(withId(R.id.swipe_refresh)).perform(swipeDown())
+        onToast(R.string.refresh_data_failed).check(matches(isDisplayed()))
         checkViewSuccessEmpty()
     }
 
     @Test
     fun swipeRefresh_whenData_resultErrorRefresh_validateVisibility() {
         mockLoadTopWikis(TopWikisResult.ErrorRefresh(emptyList()))
-        `when`(viewModel.isSuccess()).thenCallRealMethod()
         changeResult(TopWikisResult.Success(listOf(topWiki)))
         onView(withId(R.id.swipe_refresh)).perform(swipeDown())
+        onToast(R.string.refresh_data_failed).check(matches(isDisplayed()))
         checkViewSuccess()
     }
 
@@ -181,6 +184,7 @@ class TopWikisFragmentTest : KoinTest {
         InstrumentationRegistry.getInstrumentation().runOnMainSync {
             resultCaptor.value.onChanged(result)
         }
+        mockIsSuccess(result !is TopWikisResult.Error)
     }
 
     private fun changeIsLoading(enable: Boolean) {
@@ -190,11 +194,16 @@ class TopWikisFragmentTest : KoinTest {
     }
 
     private fun mockLoadTopWikis(result: TopWikisResult) {
-        `when`(viewModel.loadTopWikis(false)).then {
+        `when`(viewModel.loadTopWikis(anyBoolean())).then {
             isLoadingCaptor.value.onChanged(true)
             resultCaptor.value.onChanged(result)
             isLoadingCaptor.value.onChanged(false)
         }
+        mockIsSuccess(result !is TopWikisResult.Error)
+    }
+
+    private fun mockIsSuccess(isSuccess: Boolean) {
+        `when`(viewModel.isSuccess()).thenReturn(isSuccess)
     }
 
     private fun checkViewSuccess() {

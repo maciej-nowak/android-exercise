@@ -22,7 +22,7 @@ class TopWikisViewModel(
         get() = _isLoading
 
     init {
-        if(init) loadTopWikis()
+        if(init) this.loadTopWikis()
     }
 
     fun loadTopWikis(forceRefresh: Boolean = false) {
@@ -35,6 +35,6 @@ class TopWikisViewModel(
     }
 
     fun isSuccess(): Boolean {
-        return result.value !is TopWikisResult.Error
+        return result.value !is TopWikisResult.Error && result.value != null
     }
 }

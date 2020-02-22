@@ -22,7 +22,7 @@ class TopArticlesViewModel(
         get() = _isLoading
 
     init {
-        if(init) loadTopArticles()
+        if(init) this.loadTopArticles()
     }
 
     fun loadTopArticles(forceRefresh: Boolean = false) {
@@ -35,6 +35,6 @@ class TopArticlesViewModel(
     }
 
     fun isSuccess(): Boolean {
-        return result.value !is TopArticlesResult.Error
+        return result.value !is TopArticlesResult.Error && result.value != null
     }
 }

@@ -4,12 +4,15 @@ import android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
 import android.view.WindowManager.LayoutParams.TYPE_TOAST
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Root
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
 
-class ToastMatcher() : TypeSafeMatcher<Root>() {
+class ToastMatcher(private val maxFailures: Int = DEFAULT_MAX_FAILURES) : TypeSafeMatcher<Root>() {
+
+    private var failures = 0
 
     override fun describeTo(description: Description) {
         description.appendText("is toast")
@@ -25,14 +28,17 @@ class ToastMatcher() : TypeSafeMatcher<Root>() {
                 return true
             }
         }
-        return false
+        return (++failures >= maxFailures)
     }
 
     companion object {
-        fun onToast(text: String) = onView(withText(text)).inRoot(isToast())
-        fun onToast(textId: Int) = onView(withText(textId)).inRoot(isToast())
-        fun isToast(): Matcher<Root> {
-            return ToastMatcher()
+        private const val DEFAULT_MAX_FAILURES = 5
+        fun onToast(text: String, maxFailures: Int = DEFAULT_MAX_FAILURES): ViewInteraction =
+            onView(withText(text)).inRoot(isToast(maxFailures))
+        fun onToast(textId: Int, maxFailures: Int = DEFAULT_MAX_FAILURES): ViewInteraction =
+            onView(withText(textId)).inRoot(isToast(maxFailures))
+        fun isToast(maxFailures: Int = DEFAULT_MAX_FAILURES): Matcher<Root> {
+            return ToastMatcher(maxFailures)
         }
     }
 }

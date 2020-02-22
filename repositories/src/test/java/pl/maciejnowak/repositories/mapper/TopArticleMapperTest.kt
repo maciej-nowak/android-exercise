@@ -11,7 +11,7 @@ class TopArticleMapperTest {
     private val mapper = TopArticleMapper()
 
     @Test
-    fun validExpandendArticle_map_success() {
+    fun validExpandedArticle_map_success() {
         val input = ExpandedArticle(0, "title", Revision("user", 0L))
         val output = mapper.map(input)
         assertEquals(input.id, output.id)

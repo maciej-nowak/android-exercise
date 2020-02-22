@@ -11,7 +11,7 @@ class TopWikiMapperTest {
     private val mapper = TopWikiMapper()
 
     @Test
-    fun validExpandendWikiaItem_map_success() {
+    fun validExpandedWikiaItem_map_success() {
         val input = ExpandedWikiaItem(0, "name", "image", WikiaStats(0))
         val output = mapper.map(input)
         assertEquals(input.id, output.id)
