@@ -6,6 +6,7 @@ buildscript {
     dependencies {
         classpath Deps.gradle
         classpath Deps.kotlin_gradle_plugin
+        classpath Deps.kotlin_allopen
         classpath Deps.versions_gradle_plugin //run dependencyUpdates task to check dependencies are up to date
     }
 }
@@ -18,6 +19,10 @@ allprojects {
 }
 
 subprojects {
+    apply plugin: 'kotlin-allopen'
+    allOpen {
+        annotation 'pl.maciejnowak.commonobjects.OpenClass'
+    }
     afterEvaluate { project ->
         if (project.hasProperty('android')) {
             apply plugin: "com.github.ben-manes.versions" //for Deps.versions_gradle_plugin

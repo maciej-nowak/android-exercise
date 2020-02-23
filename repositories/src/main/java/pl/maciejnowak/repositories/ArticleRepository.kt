@@ -14,7 +14,7 @@ class ArticleRepository(
     private val mapper: TopArticleMapper
 ) {
 
-    suspend fun fetchTopArticles(forceRefresh: Boolean): TopArticlesResult {
+    suspend fun fetchTopArticles(forceRefresh: Boolean = false): TopArticlesResult {
         return if(articleDao.hasTopArticles() != null) {
             if((forceRefresh || hasDataExpired(articleDao.getTimeCreation())) && !fetchTopArticlesRemote()) {
                 TopArticlesResult.ErrorRefresh(articleDao.loadTopArticles())

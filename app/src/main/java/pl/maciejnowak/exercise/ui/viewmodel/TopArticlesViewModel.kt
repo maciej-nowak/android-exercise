@@ -2,17 +2,16 @@ package pl.maciejnowak.exercise.ui.viewmodel
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
+import pl.maciejnowak.commonobjects.OpenForTesting
 import pl.maciejnowak.repositories.ArticleRepository
 import pl.maciejnowak.repositories.model.TopArticlesResult
 
+@OpenForTesting
 class TopArticlesViewModel(
     private val repository: ArticleRepository,
-    private val dispatcher: DispatcherProvider = DispatcherProvider
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider(),
+    init: Boolean = true
 ) : ViewModel() {
-
-    init {
-        loadTopArticles()
-    }
 
     private val _result: MutableLiveData<TopArticlesResult> = MutableLiveData()
     val result: LiveData<TopArticlesResult>
@@ -22,8 +21,12 @@ class TopArticlesViewModel(
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
+    init {
+        if(init) this.loadTopArticles()
+    }
+
     fun loadTopArticles(forceRefresh: Boolean = false) {
-        viewModelScope.launch(dispatcher.IO) {
+        viewModelScope.launch(dispatcher.io()) {
             _isLoading.postValue(true)
             val articles = repository.fetchTopArticles(forceRefresh)
             _result.postValue(articles)
@@ -32,6 +35,6 @@ class TopArticlesViewModel(
     }
 
     fun isSuccess(): Boolean {
-        return result.value !is TopArticlesResult.Error
+        return result.value !is TopArticlesResult.Error && result.value != null
     }
 }

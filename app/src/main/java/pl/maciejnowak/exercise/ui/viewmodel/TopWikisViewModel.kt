@@ -2,17 +2,16 @@ package pl.maciejnowak.exercise.ui.viewmodel
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
+import pl.maciejnowak.commonobjects.OpenForTesting
 import pl.maciejnowak.repositories.WikiRepository
 import pl.maciejnowak.repositories.model.TopWikisResult
 
+@OpenForTesting
 class TopWikisViewModel(
     private val repository: WikiRepository,
-    private val dispatcher: DispatcherProvider = DispatcherProvider
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider(),
+    init: Boolean = true
 ) : ViewModel() {
-
-    init {
-        loadTopWikis()
-    }
 
     private val _result: MutableLiveData<TopWikisResult> = MutableLiveData()
     val result: LiveData<TopWikisResult>
@@ -22,8 +21,12 @@ class TopWikisViewModel(
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
+    init {
+        if(init) this.loadTopWikis()
+    }
+
     fun loadTopWikis(forceRefresh: Boolean = false) {
-        viewModelScope.launch(dispatcher.IO) {
+        viewModelScope.launch(dispatcher.io()) {
             _isLoading.postValue(true)
             val wikis = repository.fetchTopWikis(forceRefresh)
             _result.postValue(wikis)
@@ -32,6 +35,6 @@ class TopWikisViewModel(
     }
 
     fun isSuccess(): Boolean {
-        return result.value !is TopWikisResult.Error
+        return result.value !is TopWikisResult.Error && result.value != null
     }
 }

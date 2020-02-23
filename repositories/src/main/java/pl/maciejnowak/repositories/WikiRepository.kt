@@ -14,7 +14,7 @@ class WikiRepository(
     private val mapper: TopWikiMapper
 ) {
 
-    suspend fun fetchTopWikis(forceRefresh: Boolean): TopWikisResult {
+    suspend fun fetchTopWikis(forceRefresh: Boolean = false): TopWikisResult {
         return if(wikiDao.hasTopWikis() != null) {
             if((forceRefresh || hasDataExpired(wikiDao.getTimeCreation())) && !fetchTopWikisRemote()) {
                 TopWikisResult.ErrorRefresh(wikiDao.loadTopWikis())

@@ -1,10 +1,14 @@
 package pl.maciejnowak.exercise.ui.viewmodel
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlin.coroutines.CoroutineContext
 
-object DispatcherProvider {
-    var override: CoroutineContext? = null
-    val IO: CoroutineContext
-        get() = override ?: Dispatchers.IO
+interface DispatcherProvider {
+
+    fun main(): CoroutineDispatcher = Dispatchers.Main
+    fun default(): CoroutineDispatcher = Dispatchers.Default
+    fun io(): CoroutineDispatcher = Dispatchers.IO
+    fun unconfined(): CoroutineDispatcher = Dispatchers.Unconfined
 }
+
+class DefaultDispatcherProvider : DispatcherProvider
