@@ -1,6 +1,5 @@
 package pl.maciejnowak.exercise.ui.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class TopArticlesAdapter(private val context: Context, private val items: MutableList<TopArticle> = mutableListOf())
+class TopArticlesAdapter(private val items: MutableList<TopArticle> = mutableListOf())
     : RecyclerView.Adapter<TopArticlesAdapter.ViewHolder>() {
 
     private val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())

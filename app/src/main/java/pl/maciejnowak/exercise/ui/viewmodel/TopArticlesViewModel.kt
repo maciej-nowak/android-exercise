@@ -1,36 +1,40 @@
 package pl.maciejnowak.exercise.ui.viewmodel
 
 import androidx.lifecycle.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.withIndex
-import pl.maciejnowak.exercise.ui.viewmodel.model.RefreshType
+import kotlinx.coroutines.launch
+import pl.maciejnowak.commonobjects.OpenForTesting
 import pl.maciejnowak.repositories.ArticleRepository
 import pl.maciejnowak.repositories.model.TopArticlesResult
 
-class TopArticlesViewModel(private val repository: ArticleRepository) : ViewModel() {
+@OpenForTesting
+class TopArticlesViewModel(
+    private val repository: ArticleRepository,
+    private val dispatcher: DispatcherProvider = DefaultDispatcherProvider(),
+    init: Boolean = true
+) : ViewModel() {
 
-    private val refresh: MutableLiveData<RefreshType> = MutableLiveData(RefreshType.NORMAL)
+    private val _result: MutableLiveData<TopArticlesResult> = MutableLiveData()
+    val result: LiveData<TopArticlesResult>
+        get() = _result
 
-    val result: LiveData<TopArticlesResult> = refresh.switchMap { force ->
-        repository.fetchTopArticlesFlow(force.value).withIndex()
-            .onStart { _isLoading.postValue(true) }
-            .onEach { if(it.index == 0) { _isLoading.postValue(false) }}
-            .map { it.value }
-            .asLiveData(Dispatchers.IO)
-    }
-
-    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(true)
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData()
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
+    init {
+        if(init) this.loadTopArticles()
+    }
+
     fun loadTopArticles(forceRefresh: Boolean = false) {
-        refresh.value = RefreshType.valueOf(forceRefresh)
+        viewModelScope.launch(dispatcher.io()) {
+            _isLoading.postValue(true)
+            val articles = repository.fetchTopArticles(forceRefresh)
+            _result.postValue(articles)
+            _isLoading.postValue(false)
+        }
     }
 
     fun isSuccess(): Boolean {
-        return result.value is TopArticlesResult.Success
+        return result.value !is TopArticlesResult.Error && result.value != null
     }
 }

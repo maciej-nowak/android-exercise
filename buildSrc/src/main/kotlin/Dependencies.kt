@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection", "MayBeConstant")
+
 import org.gradle.api.JavaVersion
 
 object Config {
@@ -20,7 +22,7 @@ object Versions {
 
     //androidx
     val androidx_appcompat = "1.1.0"
-    val androidx_core = "1.0.1"
+    val androidx_core = "1.2.0"
     val androidx_fragment = "1.2.1"
     val androidx_legacy = "1.0.0"
     val androidx_recyclerview = "1.1.0"
@@ -33,6 +35,9 @@ object Versions {
     val junit = "4.12"
     val androidx_test_ext = "1.1.1"
     val androidx_test_espresso = "3.2.0"
+    val androidx_arch_core = "2.1.0"
+    val androidx_fragment_testing = "1.2.1"
+    val mockito = "3.2.4"
 
     //external
     val android_material = "1.1.0"
@@ -50,6 +55,7 @@ object Deps {
     //kotlin
     val kotlin = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.kotlin}"
     val kotlin_gradle_plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
+    val kotlin_allopen = "org.jetbrains.kotlin:kotlin-allopen:${Versions.kotlin}"
     val kotlinx_coroutines_core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinx}"
     val kotlinx_coroutines_android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlinx}"
 
@@ -71,8 +77,15 @@ object Deps {
 
     //test
     val junit = "junit:junit:${Versions.junit}"
+    val kotlinx_coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinx}"
     val androidx_test_ext = "androidx.test.ext:junit:${Versions.androidx_test_ext}"
     val androidx_test_espresso = "androidx.test.espresso:espresso-core:${Versions.androidx_test_espresso}"
+    val androidx_arch_core_testing = "androidx.arch.core:core-testing:${Versions.androidx_arch_core}"
+    val androidx_fragment_testing = "androidx.fragment:fragment-testing:${Versions.androidx_fragment_testing}"
+    val mockito_core = "org.mockito:mockito-core:${Versions.mockito}"
+    val mockito_inline = "org.mockito:mockito-inline:${Versions.mockito}"
+    val mockito_android = "org.mockito:mockito-android:${Versions.mockito}"
+    val koin_test = "org.koin:koin-test:${Versions.koin}"
 
     //external
     val android_material = "com.google.android.material:material:${Versions.android_material}"

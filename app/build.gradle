@@ -22,6 +22,7 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+    sourceSets { main { resources.srcDirs = ['src/main/resources', 'src/androidTest/resources/'] } }
 }
 
 dependencies {
@@ -60,6 +61,14 @@ dependencies {
 
     //test
     testImplementation Deps.junit
+    testImplementation Deps.kotlinx_coroutines_test
+    testImplementation Deps.androidx_arch_core_testing
+    testImplementation Deps.mockito_core
+
+    //androidTest
     androidTestImplementation Deps.androidx_test_ext
     androidTestImplementation Deps.androidx_test_espresso
+    androidTestImplementation (Deps.koin_test) { exclude group: 'org.mockito' }
+    androidTestImplementation Deps.mockito_android
+    debugImplementation Deps.androidx_fragment_testing
 }

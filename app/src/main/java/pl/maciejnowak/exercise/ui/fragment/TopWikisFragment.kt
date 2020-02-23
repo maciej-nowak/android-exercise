@@ -46,7 +46,7 @@ class TopWikisFragment : Fragment() {
         when(result) {
             is TopWikisResult.Success -> { renderSuccess(result.list) }
             is TopWikisResult.Error -> { renderError() }
-            is TopWikisResult.ErrorRefresh -> { renderErrorRefresh() }
+            is TopWikisResult.ErrorRefresh -> { renderErrorRefresh(result.list) }
         }
     }
 
@@ -77,8 +77,11 @@ class TopWikisFragment : Fragment() {
         error_container.visibility = View.VISIBLE
     }
 
-    private fun renderErrorRefresh() {
+    private fun renderErrorRefresh(items: List<TopWiki>) {
         showMessage(R.string.refresh_data_failed)
+        if(adapter.itemCount <= 0) {
+            renderSuccess(items)
+        }
     }
 
     private fun setRecyclerView() {
